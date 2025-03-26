@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
+require("dotenv").config();
 const bcrypt = require("bcryptjs")
 const path = require("path")
 const User = require("./models/userModel")
@@ -23,7 +24,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 // MongoDB Connection
 mongoose
-  .connect("mongodb+srv://syntaxsoldierss:iNWtx9OacP4IEcDx@peersphere.t7wd4.mongodb.net/PeerSphere", {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
