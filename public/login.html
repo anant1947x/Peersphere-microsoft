@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerSphere - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#00D9C0',
+                        tertiary: '#FF3D71',
+                        dark: '#0A0A0A',
+                        darker: '#050505',
+                        light: '#F0F0F0'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        morph: {
+                            '0%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' },
+                            '50%': { borderRadius: '30% 60% 70% 40%/50% 60% 30% 60%' },
+                            '100%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        
+        /* Animated Gradient Background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6C63FF, #00D9C0, #FF3D71, #6C63FF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-text 5s ease infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Morphing Blob */
+        .blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+            background: linear-gradient(45deg, #6C63FF, #00D9C0);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        /* Button Hover Effects */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            z-index: -1;
+            transition: background-position 0.5s ease;
+        }
+        
+        .btn-hover:hover::before {
+            background-position: 100% 0;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* Glow Effect */
+        .glow-on-hover {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glow-on-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+            box-shadow: 0 0 20px 5px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow-on-hover:hover::after {
+            opacity: 1;
+        }
+        
+        /* Card Hover */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(108, 99, 255, 0.1), transparent 70%);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            border-radius: inherit;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                0 20px 25px -5px rgba(108, 99, 255, 0.2), 
+                0 10px 10px -5px rgba(0, 217, 192, 0.1),
+                0 0 15px rgba(108, 99, 255, 0.4);
+        }
+        
+        .card-hover:hover::before {
+            opacity: 1;
+        }
+        
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: rgba(240, 240, 240, 0.6);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(240, 240, 240, 0.2);
+        }
+        
+        .divider::before {
+            margin-right: 0.5em;
+        }
+        
+        .divider::after {
+            margin-left: 0.5em;
+        }
+        
+        /* Input Focus */
+        .input-focus:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+        
+        /* Error and Success Messages */
+        .error-message {
+            color: #FF3D71;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .success-message {
+            color: #00D9C0;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-darker text-light">
+    <!-- Login Overlay -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-darker bg-opacity-80 backdrop-blur-md">
+        <div class="relative w-full max-w-md p-8 mx-4 overflow-hidden rounded-2xl card-hover bg-dark border border-primary/20">
+            <!-- Decorative Blobs -->
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary/10 rounded-full blur-xl"></div>
+            
+            <!-- Login Form Container -->
+            <div class="relative z-10">
+                <!-- Logo and Title -->
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-12 h-12 blob flex items-center justify-center mr-3 glow-on-hover floating">
+                            <span class="text-dark font-bold text-xl">P</span>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold gradient-text">Welcome Back</h2>
+                    <p class="text-light/60 mt-2">Sign in to continue to PeerSphere</p>
+                </div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="space-y-5">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-light/80 mb-1">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="w-full px-4 py-3 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                            required
+                        >
+                    </div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label for="password" class="block text-sm font-medium text-light/80">Password</label>
+                            <a href="#" class="text-xs text-primary hover:text-secondary transition-colors">Forgot password?</a>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="w-full px-4 py-3 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                            required
+                        >
+                    </div>
+                    
+                    <div id="formError" class="error-message text-center"></div>
+                    <div id="formSuccess" class="success-message text-center"></div>
+                    
+                    <div>
+                        <button type="submit" class="w-full py-3 rounded-lg btn-hover text-dark font-semibold">
+                          <span class="relative z-10">Sign In</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Divider -->
+                <div class="divider my-6">or continue with</div>
+                
+                <!-- Social Login -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <!-- Google Login -->
+                    <button 
+                        class="flex items-center justify-center py-3 px-4 bg-darker border border-light/20 rounded-lg hover:bg-light/5 transition-colors"
+                    >
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.37 0 0 5.37 0 12C0 17.31 3.435 21.795 8.205 23.385C8.805 23.49 9.03 23.13 9.03 22.815C9.03 22.53 9.015 21.585 9.015 20.58C6 21.135 5.22 19.845 4.98 19.17C4.845 18.825 4.26 17.76 3.75 17.475C3.33 17.25 2.73 16.695 3.735 16.68C4.68 16.665 5.355 17.55 5.58 17.91C6.66 19.725 8.385 19.215 9.075 18.9C9.18 18.12 9.495 17.595 9.84 17.295C7.17 16.995 4.38 15.96 4.38 11.37C4.38 10.065 4.845 8.985 5.61 8.145C5.49 7.845 5.07 6.615 5.73 4.965C5.73 4.965 6.735 4.65 9.03 6.195C9.99 5.925 11.01 5.79 12.03 5.79C13.05 5.79 14.07 5.925 15.03 6.195C17.325 4.635 18.33 4.965 18.33 4.965C18.99 6.615 18.57 7.845 18.45 8.145C19.215 8.985 19.68 10.05 19.68 11.37C19.68 15.975 16.875 16.995 14.205 17.295C14.64 17.67 15.015 18.39 15.015 19.515C15.015 21.12 15 22.41 15 22.815C15 23.13 15.225 23.505 15.825 23.385C18.2072 22.5807 20.2772 21.0497 21.7437 19.0074C23.2101 16.965 23.9993 14.5143 24 12C24 5.37 18.63 0 12 0Z" />
+                        </svg>
+                        Google
+                    </button>
+                    
+                    <!-- GitHub Login -->
+                    <button 
+                        class="flex items-center justify-center py-3 px-4 bg-darker border border-light/20 rounded-lg hover:bg-light/5 transition-colors"
+                    >
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C5.37 0 0 5.37 0 12C0 17.31 3.435 21.795 8.205 23.385C8.805 23.49 9.03 23.13 9.03 22.815C9.03 22.53 9.015 21.585 9.015 20.58C6 21.135 5.22 19.845 4.98 19.17C4.845 18.825 4.26 17.76 3.75 17.475C3.33 17.25 2.73 16.695 3.735 16.68C4.68 16.665 5.355 17.55 5.58 17.91C6.66 19.725 8.385 19.215 9.075 18.9C9.18 18.12 9.495 17.595 9.84 17.295C7.17 16.995 4.38 15.96 4.38 11.37C4.38 10.065 4.845 8.985 5.61 8.145C5.49 7.845 5.07 6.615 5.73 4.965C5.73 4.965 6.735 4.65 9.03 6.195C9.99 5.925 11.01 5.79 12.03 5.79C13.05 5.79 14.07 5.925 15.03 6.195C17.325 4.635 18.33 4.965 18.33 4.965C18.99 6.615 18.57 7.845 18.45 8.145C19.215 8.985 19.68 10.05 19.68 11.37C19.68 15.975 16.875 16.995 14.205 17.295C14.64 17.67 15.015 18.39 15.015 19.515C15.015 21.12 15 22.41 15 22.815C15 23.13 15.225 23.505 15.825 23.385C18.2072 22.5807 20.2772 21.0497 21.7437 19.0074C23.2101 16.965 23.9993 14.5143 24 12C24 5.37 18.63 0 12 0Z" />
+                        </svg>
+                        GitHub
+                    </button>
+                </div>
+                
+                <!-- Sign Up Link -->
+                <div class="text-center">
+                    <p class="text-light/60">
+                        Don't have an account? 
+                        <a href="signup.html" class="text-primary hover:text-secondary transition-colors font-medium">Sign up</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.getElementById('formError').textContent = '';
+            document.getElementById('formError').classList.remove('show');
+            document.getElementById('formSuccess').textContent = '';
+            document.getElementById('formSuccess').classList.remove('show');
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const formError = document.getElementById('formError');
+                const formSuccess = document.getElementById('formSuccess');
+                
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    formSuccess.textContent = 'Login Successful! Redirecting to dashboard...';
+                    formSuccess.classList.add('show');
+                    
+                    // Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'aftersign.html';
+
+                    }, 1500);
+                } else {
+                    formError.textContent = data.error || 'Login failed. Please check your credentials.';
+                    formError.classList.add('show');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                const formError = document.getElementById('formError');
+                formError.textContent = 'Something went wrong. Please try again.';
+                formError.classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
+

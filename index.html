@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerSphere - Connect, Collaborate, Grow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#00D9C0',
+                        tertiary: '#FF3D71',
+                        dark: '#0A0A0A',
+                        darker: '#050505',
+                        light: '#F0F0F0'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'float-fast': 'float 4s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                        'loading': 'loading 2s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        glow: {
+                            '0%': { textShadow: '0 0 5px rgba(108, 99, 255, 0.5)' },
+                            '100%': { textShadow: '0 0 20px rgba(108, 99, 255, 0.8), 0 0 30px rgba(0, 217, 192, 0.6)' }
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' }
+                        },
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        morph: {
+                            '0%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' },
+                            '50%': { borderRadius: '30% 60% 70% 40%/50% 60% 30% 60%' },
+                            '100%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' }
+                        },
+                        loading: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0.5' },
+                            '50%': { transform: 'scale(1.2)', opacity: '1' },
+                            '100%': { transform: 'scale(0.8)', opacity: '0.5' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #050505;
+            color: #F0F0F0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Gradient Background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6C63FF, #00D9C0, #FF3D71, #6C63FF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Parallax Effect */
+        .parallax {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .parallax-layer {
+            transform: translateZ(0);
+            transition: transform 0.5s;
+        }
+        
+        .parallax-deep {
+            transform: translateZ(-100px) scale(1.5);
+        }
+        
+        .parallax-medium {
+            transform: translateZ(-50px) scale(1.25);
+        }
+        
+        .parallax-shallow {
+            transform: translateZ(-25px) scale(1.125);
+        }
+        
+        /* Enhanced Card Hover Effects */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(108, 99, 255, 0.1), transparent 70%);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            border-radius: inherit;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                0 20px 25px -5px rgba(108, 99, 255, 0.2), 
+                0 10px 10px -5px rgba(0, 217, 192, 0.1),
+                0 0 15px rgba(108, 99, 255, 0.4);
+        }
+        
+        .card-hover:hover::before {
+            opacity: 1;
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-text 5s ease infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Gradient Border */
+        .gradient-border {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .gradient-border::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6C63FF, #00D9C0, #FF3D71, #6C63FF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            border-radius: 0.6rem;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+        
+        /* Three.js Container */
+        #three-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+        
+        /* Scroll Indicator */
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* Feature Card */
+        .feature-card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid rgba(108, 99, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        
+        .feature-card:hover {
+            border-color: rgba(108, 99, 255, 0.5);
+            box-shadow: 
+                0 0 20px rgba(108, 99, 255, 0.3),
+                0 0 40px rgba(0, 217, 192, 0.1);
+            transform: translateY(-10px) scale(1.02);
+        }
+        
+        .feature-card:hover::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Nav Link Animation */
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            transition: width 0.3s ease, background-position 5s ease;
+        }
+        
+        .nav-link:hover {
+            color: #fff;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            animation: gradient-text 5s ease infinite;
+        }
+        
+        /* Button Hover Effects */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            z-index: -1;
+            transition: background-position 0.5s ease;
+        }
+        
+        .btn-hover:hover::before {
+            background-position: 100% 0;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn-hover:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 10px rgba(108, 99, 255, 0.2);
+        }
+        
+        /* Glow Effect */
+        .glow-on-hover {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glow-on-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+            box-shadow: 0 0 20px 5px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow-on-hover:hover::after {
+            opacity: 1;
+        }
+        
+        /* Morphing Blob */
+        .blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+            background: linear-gradient(45deg, #6C63FF, #00D9C0);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes morph {
+            0% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+            }
+            100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+        }
+        
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-slow {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-fast {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* Rotating Animation */
+        .rotating {
+            animation: spin 10s linear infinite;
+        }
+        
+        .rotating-reverse {
+            animation: spin 10s linear infinite reverse;
+        }
+        
+        /* Pulse Animation */
+        .pulsing {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* Shimmer Effect */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) rotate(30deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(30deg);
+            }
+        }
+        
+        /* Neon Text Effect */
+        .neon-text {
+            color: #fff;
+            text-shadow:
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #6C63FF,
+                0 0 30px #6C63FF,
+                0 0 40px #6C63FF,
+                0 0 55px #6C63FF,
+                0 0 75px #6C63FF;
+            animation: neon 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes neon {
+            from {
+                text-shadow:
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #6C63FF,
+                    0 0 30px #6C63FF,
+                    0 0 40px #6C63FF,
+                    0 0 55px #6C63FF,
+                    0 0 75px #6C63FF;
+            }
+            to {
+                text-shadow:
+                    0 0 2.5px #fff,
+                    0 0 5px #fff,
+                    0 0 10px #6C63FF,
+                    0 0 15px #6C63FF,
+                    0 0 20px #6C63FF,
+                    0 0 27.5px #6C63FF,
+                    0 0 37.5px #6C63FF;
+            }
+        }
+        
+        /* Animated Icon */
+        .icon-animated {
+            transition: all 0.3s ease;
+        }
+        
+        .icon-animated:hover {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 8px rgba(108, 99, 255, 0.8));
+        }
+        
+        /* Ripple Effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out;
+        }
+        
+        .ripple:hover::after {
+            width: 300%;
+            height: 300%;
+            opacity: 1;
+        }
+        
+        /* Magnetic Button Effect */
+        .magnetic-btn {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        /* Loading Animation */
+        .loading-animation {
+            animation: loading 2s ease-in-out infinite;
+        }
+        
+        /* Fade In Animation */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered Loading */
+        .staggered-load {
+            opacity: 0;
+        }
+        
+        .staggered-load.loaded {
+            animation: staggerLoad 0.8s ease-out forwards;
+        }
+        
+        @keyframes staggerLoad {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Slide In Animation */
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .slide-in-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .slide-in-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Feature Icon Pulse */
+        .feature-icon-pulse {
+            animation: featureIconPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes featureIconPulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* Staggered Feature Animation */
+        .stagger-feature {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+        
+        .stagger-feature.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Three.js Container -->
+    <div id="three-container"></div>
+    
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-darker">
+        <div class="text-center">
+            <div class="w-24 h-24 mx-auto mb-8 relative">
+                <div class="absolute inset-0 blob bg-gradient-to-r from-primary to-secondary opacity-80"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="text-4xl font-bold text-dark">P</span>
+                </div>
+            </div>
+            <h2 class="text-2xl font-bold gradient-text mb-4">PeerSphere</h2>
+            <div class="flex justify-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-primary animate-bounce" style="animation-delay: 0ms"></div>
+                <div class="w-3 h-3 rounded-full bg-secondary animate-bounce" style="animation-delay: 300ms"></div>
+                <div class="w-3 h-3 rounded-full bg-tertiary animate-bounce" style="animation-delay: 600ms"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4 bg-darker bg-opacity-80 backdrop-blur-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-10 h-10 blob flex items-center justify-center mr-3 glow-on-hover">
+                    <span class="text-dark font-bold text-xl">P</span>
+                </div>
+                <span class="text-2xl font-bold gradient-text">PeerSphere</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="nav-link text-light hover:text-primary transition-colors">Features</a>
+                <a href="#about" class="nav-link text-light hover:text-primary transition-colors">About</a>
+                <a href="#connect" class="nav-link text-light hover:text-primary transition-colors">Connect</a>
+                <a href="#premium" class="nav-link text-light hover:text-primary transition-colors">Premium</a>
+            </div>
+            <div>
+                <button class="px-6 py-2 rounded-full btn-hover text-dark font-semibold">
+                  <a href="/public/login.html">  <span class="relative z-10">Join Now</span> </a>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
+        <div class="container mx-auto text-center z-10 parallax">
+            <div class="parallax-layer parallax-shallow">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
+                    Connecting Students, Bridging Colleges, Building Futures
+                </h1>
+                <p class="text-xl md:text-2xl text-light/80 max-w-3xl mx-auto mb-10 shimmer">
+                    Join the next generation platform that connects students across colleges to network, collaborate, and excel together.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+                    <button class="px-8 py-3 rounded-full btn-hover text-dark font-semibold ripple">
+                        <span class="relative z-10">Get Started</span>
+                    </button>
+                    <button class="px-8 py-3 rounded-full bg-transparent border border-primary text-light hover:bg-primary/10 transition-all glow-on-hover">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 scroll-indicator">
+                <svg class="w-10 h-10 text-light/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 gradient-text">Redefining Student Networking</h2>
+                <p class="text-lg text-light/70 max-w-2xl mx-auto shimmer">
+                    PeerSphere brings together innovative features designed to enhance your academic and professional journey.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card rounded-xl p-6 card-hover staggered-load">
+                    <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mb-6 floating">
+                        <svg class="w-8 h-8 text-primary icon-animated" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 gradient-text">College Chat Rooms</h3>
+                    <p class="text-light/70 mb-4">
+                        Join branch-specific chat rooms to discuss topics, clear doubts, and collaborate with peers from your college and beyond.
+                    </p>
+                    <a href="#" class="text-primary hover:text-secondary transition-colors flex items-center group">
+                        Explore Rooms
+                        <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card rounded-xl p-6 card-hover staggered-load">
+                    <div class="w-14 h-14 rounded-full bg-secondary/20 flex items-center justify-center mb-6 floating-slow">
+                        <svg class="w-8 h-8 text-secondary icon-animated" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 gradient-text">Entrepreneurship Hub</h3>
+                    <p class="text-light/70 mb-4">
+                        Connect with startups and contribute your skills in marketing, coding, or design in exchange for potential earnings.
+                    </p>
+                    <a href="#" class="text-secondary hover:text-primary transition-colors flex items-center group">
+                        Discover Opportunities
+                        <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card rounded-xl p-6 card-hover staggered-load">
+                    <div class="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center mb-6 floating-fast">
+                        <svg class="w-8 h-8 text-primary icon-animated" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3 gradient-text">Rating System</h3>
+                    <p class="text-light/70 mb-4">
+                        Identify top-rated individuals based on their skills and achievements to network with high-performing peers.
+                    </p>
+                    <a href="#" class="text-primary hover:text-secondary transition-colors flex items-center group">
+                        View Top Rated
+                        <svg class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Build Your Startup Section -->
+    <section id="build-startup" class="py-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 slide-in-left">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                        Build Your <span class="gradient-text">Startup</span> With<br>The Right Team
+                    </h2>
+                    <p class="text-lg text-light/70 mb-8 shimmer">
+                        Connect with like-minded entrepreneurs, collaborate on innovative ideas, and transform your vision into reality.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button class="px-8 py-3 rounded-full btn-hover text-dark font-semibold ripple">
+                            <span class="relative z-10">Get Started</span>
+                        </button>
+                        <button class="px-8 py-3 rounded-full bg-transparent border border-primary text-light hover:bg-primary/10 transition-all glow-on-hover">
+                            Explore Communities
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 mt-10 lg:mt-0 slide-in-right">
+                    <div class="rounded-xl overflow-hidden gradient-border">
+                        <img src="image.png" alt="Team collaboration" class="w-full h-auto rounded-xl">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Seamless Collaboration Section -->
+    <section id="collaboration" class="py-20 px-6 bg-dark relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Seamless <span class="gradient-text">Collaboration</span>
+                </h2>
+                <p class="text-lg text-light/70 max-w-3xl mx-auto shimmer">
+                    Our platform makes it easy to collaborate with team members, assign tasks, and track progress.
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 slide-in-left">
+                    <div class="rounded-xl overflow-hidden gradient-border">
+                        <img src="i.png" alt="Team collaboration" class="w-full h-auto rounded-xl">
+                    </div>
+                </div>
+                <div class="lg:w-1/2 mt-10 lg:mt-0">
+                    <div class="space-y-8">
+                        <div class="flex items-start gap-4 stagger-feature">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 feature-icon-pulse">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">Task Allocation</h3>
+                                <p class="text-light/70">
+                                    Assign specific roles and responsibilities to team members based on their skills and interests. Ensure everyone knows what they need to do.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 stagger-feature">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 feature-icon-pulse">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">Real-time Communication</h3>
+                                <p class="text-light/70">
+                                    Chat with team members, share updates, and discuss ideas in real-time. Keep everyone on the same page with integrated messaging.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 stagger-feature">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 feature-icon-pulse">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">Document Collaboration</h3>
+                                <p class="text-light/70">
+                                    Create, edit, and share documents with your team. Work together on business plans, marketing strategies, and product specifications.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 stagger-feature">
+                            <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 feature-icon-pulse">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold mb-2">Progress Tracking</h3>
+                                <p class="text-light/70">
+                                    Monitor project progress with visual dashboards and milestone tracking. Celebrate achievements and identify bottlenecks early.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6 bg-dark relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-6 gradient-text">About PeerSphere</h2>
+                    <p class="text-lg text-light/70 mb-6 shimmer">
+                        PeerSphere is a revolutionary platform designed to bridge the gap between academic learning and real-world application. We believe in the power of peer-to-peer connections to enhance the educational experience.
+                    </p>
+                    <p class="text-lg text-light/70 mb-8">
+                        Our mission is to create a vibrant ecosystem where students can share knowledge, collaborate on projects, and build meaningful professional relationships that extend beyond graduation.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="card-hover p-4 rounded-lg bg-darker staggered-load">
+                            <h4 class="text-2xl font-bold text-primary mb-2 neon-text">10K+</h4>
+                            <p class="text-light/70">Active Students</p>
+                        </div>
+                        <div class="card-hover p-4 rounded-lg bg-darker staggered-load">
+                            <h4 class="text-2xl font-bold text-secondary mb-2 neon-text">500+</h4>
+                            <p class="text-light/70">College Networks</p>
+                        </div>
+                        <div class="card-hover p-4 rounded-lg bg-darker staggered-load">
+                            <h4 class="text-2xl font-bold text-primary mb-2 neon-text">250+</h4>
+                            <p class="text-light/70">Startup Partners</p>
+                        </div>
+                        <div class="card-hover p-4 rounded-lg bg-darker staggered-load">
+                            <h4 class="text-2xl font-bold text-secondary mb-2 neon-text">5K+</h4>
+                            <p class="text-light/70">Successful Collaborations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 relative">
+                    <div class="relative w-full h-[400px] rounded-xl overflow-hidden gradient-border">
+                        <div class="absolute inset-0 bg-darker">
+                            <!-- This would be a 3D visualization in the actual implementation -->
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="floating">
+                                        <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-primary to-secondary opacity-80 blur-xl"></div>
+                                    </div>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-4xl font-bold gradient-text animate-pulse-slow">PeerSphere</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-xl pulsing"></div>
+                    <div class="absolute -top-6 -left-6 w-24 h-24 bg-secondary/20 rounded-full blur-xl pulsing"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Connect Section -->
+    <section id="connect" class="py-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 gradient-text">How PeerSphere Connects You</h2>
+                <p class="text-lg text-light/70 max-w-2xl mx-auto shimmer">
+                    Discover the various ways PeerSphere helps you build meaningful connections and advance your academic and professional journey.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- College Chat Rooms -->
+                <div class="feature-card rounded-xl p-8 card-hover staggered-load">
+                    <h3 class="text-2xl font-semibold mb-4 gradient-text">College Chat Rooms</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-primary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Branch-specific rooms for targeted discussions</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-primary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Real-time doubt clearing and problem-solving</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-primary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Share resources and study materials</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-primary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Form study groups for collaborative learning</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Entrepreneurship Section -->
+                <div class="feature-card rounded-xl p-8 card-hover staggered-load">
+                    <h3 class="text-2xl font-semibold mb-4 gradient-text">Entrepreneurship Section</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-secondary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Connect with early-stage startups looking for talent</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-secondary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Contribute your skills in marketing, coding, or design</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-secondary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Earn while you learn through real-world projects</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-6 h-6 text-secondary mr-3 mt-1 flex-shrink-0 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Build your portfolio with verified work experience</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Premium Section -->
+    <section id="premium" class="py-20 px-6 bg-dark relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6 gradient-text">Premium Features</h2>
+                <p class="text-lg text-light/70 max-w-2xl mx-auto shimmer">
+                    Unlock exclusive benefits with PeerSphere Premium to accelerate your growth and networking potential.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic Plan -->
+                <div class="feature-card rounded-xl p-8 card-hover border border-light/10 staggered-load">
+                    <h3 class="text-2xl font-semibold mb-2">Basic</h3>
+                    <p class="text-light/70 mb-6">Perfect for getting started</p>
+                    <div class="text-4xl font-bold mb-6 gradient-text">Free</div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Access to college chat rooms</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Basic profile customization</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Limited entrepreneurship access</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full bg-transparent border border-primary text-light hover:bg-primary/10 transition-all glow-on-hover ripple">
+                        Get Started
+                    </button>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="feature-card rounded-xl p-8 card-hover border border-primary relative staggered-load">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-primary text-dark px-4 py-1 rounded-full text-sm font-semibold animated-gradient">
+                        Most Popular
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-2">Pro</h3>
+                    <p class="text-light/70 mb-6">For serious networkers</p>
+                    <div class="text-4xl font-bold mb-6 gradient-text">$9.99<span class="text-lg font-normal text-light/70">/mo</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">All Basic features</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Full entrepreneurship access</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Connect with top-rated peers</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-primary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Priority in startup matching</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full btn-hover text-dark font-semibold ripple">
+                        <span class="relative z-10">Upgrade Now</span>
+                    </button>
+                </div>
+                
+                <!-- Premium Plan -->
+                <div class="feature-card rounded-xl p-8 card-hover border border-light/10 staggered-load">
+                    <h3 class="text-2xl font-semibold mb-2">Premium</h3>
+                    <p class="text-light/70 mb-6">For future leaders</p>
+                    <div class="text-4xl font-bold mb-6 gradient-text">$19.99<span class="text-lg font-normal text-light/70">/mo</span></div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-secondary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">All Pro features</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-secondary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">1-on-1 mentorship sessions</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-secondary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Exclusive networking events</span>
+                        </li>
+                        <li class="flex items-center group">
+                            <svg class="w-5 h-5 text-secondary mr-2 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-light/80 group-hover:text-white transition-colors duration-300">Verified profile badge</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-full bg-transparent border border-secondary text-light hover:bg-secondary/10 transition-all glow-on-hover ripple">
+                        Go Premium
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-20 px-6 relative overflow-hidden">
+        <div class="container mx-auto z-10 relative">
+            <div class="max-w-4xl mx-auto bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl p-10 backdrop-blur-lg border border-primary/30 card-hover">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text">Ready to Transform Your Academic Journey?</h2>
+                    <p class="text-lg text-light/80 mb-8 max-w-2xl mx-auto shimmer">
+                        Join thousands of students who are already networking, collaborating, and growing with PeerSphere.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button class="px-8 py-3 rounded-full btn-hover text-dark font-semibold ripple">
+                            <span class="relative z-10">Join PeerSphere Today</span>
+                        </button>
+                        <button class="px-8 py-3 rounded-full bg-transparent border border-light/30 text-light hover:bg-light/5 transition-all glow-on-hover">
+                            Schedule a Demo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 px-6 bg-darker">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 blob flex items-center justify-center mr-3 glow-on-hover">
+                            <span class="text-dark font-bold text-xl">P</span>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">PeerSphere</span>
+                    </div>
+                    <p class="text-light/70 mb-4">
+                        Connecting students across colleges to network, collaborate, and excel together.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center text-light/70 hover:text-primary transition-colors glow-on-hover">
+                            <svg class="w-5 h-5 icon-animated" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center text-light/70 hover:text-primary transition-colors glow-on-hover">
+                            <svg class="w-5 h-5 icon-animated" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-dark flex items-center justify-center text-light/70 hover:text-primary transition-colors glow-on-hover">
+                            <svg class="w-5 h-5 icon-animated" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 gradient-text">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Home</a></li>
+                        <li><a href="#features" class="text-light/70 hover:text-primary transition-colors nav-link">Features</a></li>
+                        <li><a href="#about" class="text-light/70 hover:text-primary transition-colors nav-link">About</a></li>
+                        <li><a href="#premium" class="text-light/70 hover:text-primary transition-colors nav-link">Premium</a></li>
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 gradient-text">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Help Center</a></li>
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Community Guidelines</a></li>
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Privacy Policy</a></li>
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">Terms of Service</a></li>
+                        <li><a href="#" class="text-light/70 hover:text-primary transition-colors nav-link">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 gradient-text">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start group">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-0.5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="text-light/70 group-hover:text-white transition-colors duration-300"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="92e1e7e2e2fde0e6d2e2f7f7e0e1e2faf7e0f7bcf1fdff">[email&#160;protected]</a></span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-0.5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                            <span class="text-light/70 group-hover:text-white transition-colors duration-300">+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-start group">
+                            <svg class="w-5 h-5 text-primary mr-2 mt-0.5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            <span class="text-light/70 group-hover:text-white transition-colors duration-300">123 Innovation Street, Tech City, TC 10101</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-light/10 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-light/50 text-sm mb-4 md:mb-0">
+                        &copy; 2025 PeerSphere. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-light/50 text-sm hover:text-primary transition-colors nav-link">Privacy Policy</a>
+                        <a href="#" class="text-light/50 text-sm hover:text-primary transition-colors nav-link">Terms of Service</a>
+                        <a href="#" class="text-light/50 text-sm hover:text-primary transition-colors nav-link">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Three.js and Animation Scripts -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Initialize Three.js scene
+        function initThreeScene() {
+            const container = document.getElementById('three-container');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+            
+            // Create particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 2000;
+            
+            const posArray = new Float32Array(particlesCount * 3);
+            const colorsArray = new Float32Array(particlesCount * 3);
+            
+            const color1 = new THREE.Color(0x6C63FF);
+            const color2 = new THREE.Color(0x00D9C0);
+            const color3 = new THREE.Color(0xFF3D71);
+            
+            for(let i = 0; i < particlesCount * 3; i += 3) {
+                // Position
+                posArray[i] = (Math.random() - 0.5) * 15;
+                posArray[i+1] = (Math.random() - 0.5) * 15;
+                posArray[i+2] = (Math.random() - 0.5) * 15;
+                
+                // Color
+                const colorChoice = Math.random();
+                let color;
+                
+                if (colorChoice < 0.33) {
+                    color = color1;
+                } else if (colorChoice < 0.66) {
+                    color = color2;
+                } else {
+                    color = color3;
+                }
+                
+                colorsArray[i] = color.r;
+                colorsArray[i+1] = color.g;
+                colorsArray[i+2] = color.b;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorsArray, 3));
+            
+            // Materials
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.03,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+            
+            // Mesh
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+            
+            // Add some light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            camera.position.z = 5;
+            
+            // Mouse interaction
+            let mouseX = 0;
+            let mouseY = 0;
+            
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            });
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particlesMesh.rotation.x += 0.0005;
+                particlesMesh.rotation.y += 0.0005;
+                
+                // Responsive to mouse movement
+                particlesMesh.rotation.x += mouseY * 0.0005;
+                particlesMesh.rotation.y += mouseX * 0.0005;
+                
+                // Pulsing effect
+                const time = Date.now() * 0.0005;
+                particlesMesh.scale.x = 1 + Math.sin(time) * 0.1;
+                particlesMesh.scale.y = 1 + Math.sin(time) * 0.1;
+                particlesMesh.scale.z = 1 + Math.sin(time) * 0.1;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Initialize parallax effect
+        function initParallax() {
+            document.addEventListener('mousemove', (e) => {
+                const layers = document.querySelectorAll('.parallax-layer');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                layers.forEach(layer => {
+                    const depth = layer.classList.contains('parallax-deep') ? 40 : 
+                                 layer.classList.contains('parallax-medium') ? 25 : 15;
+                    
+                    const translateX = (x - 0.5) * depth;
+                    const translateY = (y - 0.5) * depth;
+                    
+                    layer.style.transform = `translate(${translateX}px, ${translateY}px)`;
+                });
+            });
+        }
+        
+        // Initialize smooth scrolling
+        function initSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: {
+                            y: this.getAttribute('href'),
+                            offsetY: 50
+                        },
+                        ease: "power3.inOut"
+                    });
+                });
+            });
+        }
+        
+        // Initialize magnetic buttons
+        function initMagneticButtons() {
+            const buttons = document.querySelectorAll('.magnetic-btn');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+                });
+                
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0, 0)';
+                });
+            });
+        }
+        
+        // Initialize animations with GSAP
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Animate feature cards
+            gsap.utils.toArray('.feature-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    delay: i * 0.1
+                });
+            });
+            
+            // Animate section headings
+            gsap.utils.toArray('.gradient-text').forEach(heading => {
+                gsap.from(heading, {
+                    y: 30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: heading,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+            
+            // Animate the hero section
+            gsap.from('.parallax-shallow', {
+                y: 50,
+                opacity: 0,
+                duration: 1.2,
+                ease: "power2.out",
+                delay: 0.5
+            });
+            
+            // Animate blobs
+            gsap.utils.toArray('.blob').forEach(blob => {
+                gsap.to(blob, {
+                    scale: 1.1,
+                    duration: 2,
+                    ease: "sine.inOut",
+                    repeat: -1,
+                    yoyo: true
+                });
+            });
+            
+            // Animate cards on hover
+            const cards = document.querySelectorAll('.card-hover');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, {
+                        y: -15,
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        y: 0,
+                        scale: 1,
+                        duration: 0.3,
+                        ease: "power2.in"
+                    });
+                });
+            });
+            
+            // Staggered loading animation
+            gsap.utils.toArray('.staggered-load').forEach((element, i) => {
+                ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 85%",
+                    onEnter: () => {
+                        element.classList.add('loaded');
+                    }
+                });
+            });
+            
+            // Slide in animations
+            gsap.utils.toArray('.slide-in-left').forEach(element => {
+                ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 80%",
+                    onEnter: () => {
+                        element.classList.add('active');
+                    }
+                });
+            });
+            
+            gsap.utils.toArray('.slide-in-right').forEach(element => {
+                ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 80%",
+                    onEnter: () => {
+                        element.classList.add('active');
+                    }
+                });
+            });
+            
+            // Staggered feature animations
+            gsap.utils.toArray('.stagger-feature').forEach((element, i) => {
+                ScrollTrigger.create({
+                    trigger: element,
+                    start: "top 85%",
+                    onEnter: () => {
+                        element.classList.add('active');
+                        gsap.to(element, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.6,
+                            delay: i * 0.1,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Loading screen animation
+        function initLoadingScreen() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            // Simulate loading time
+            setTimeout(() => {
+                gsap.to(loadingOverlay, {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        loadingOverlay.style.display = 'none';
+                    }
+                });
+            }, 2000);
+        }
+        
+        // Initialize everything when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initLoadingScreen();
+            initThreeScene();
+            initParallax();
+            initSmoothScroll();
+            initMagneticButtons();
+            initAnimations();
+        });
+    </script>
+</body>
+</html>

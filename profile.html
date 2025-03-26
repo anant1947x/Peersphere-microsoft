@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#00D9C0',
+                        dark: '#121212',
+                        darker: '#0A0A0A',
+                        'gray-dark': '#1E1E1E',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #6C63FF, #00D9C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 217, 192, 0.1));
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(108, 99, 255, 0.3);
+        }
+        
+        .profile-img-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border: 4px solid #6C63FF;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-img-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow {
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow:hover {
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.8);
+        }
+        
+        .page-transition {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark min-h-screen">
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary bg-opacity-10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-10 w-80 h-80 bg-secondary bg-opacity-10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-darker bg-opacity-90 backdrop-blur-md py-4 fixed w-full z-50">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold gradient-text">DevProfile</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Home</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Dashboard</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Projects</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Messages</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="text-white hover:text-primary transition-colors duration-300">
+                        <i class="fas fa-moon text-xl"></i>
+                    </button>
+                    <button id="notifications" class="text-white hover:text-primary transition-colors duration-300 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                    </button>
+                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary cursor-pointer" id="profile-menu-trigger">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Profile Menu Dropdown (Hidden by default) -->
+    <div id="profile-menu" class="hidden absolute right-4 top-16 mt-2 w-48 bg-darker rounded-lg shadow-lg py-2 z-50">
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-user mr-2"></i> My Profile
+        </a>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-cog mr-2"></i> Settings
+        </a>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-question-circle mr-2"></i> Help
+        </a>
+        <div class="border-t border-gray-700 my-1"></div>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-6 pt-24 pb-12 page-transition">
+        <div class="max-w-4xl mx-auto">
+            <!-- Profile Header -->
+            <div class="bg-darker rounded-xl p-6 md:p-8 shadow-lg mb-8" data-aos="fade-up">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <!-- Profile Image -->
+                    <div class="profile-img-container">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="w-full h-full object-cover" id="profile-image">
+                    </div>
+                    
+                    <!-- Profile Info -->
+                    <div class="flex-1 text-center md:text-left">
+                        <h1 class="text-3xl font-bold mb-2" id="display-name">Alex Johnson</h1>
+                        <p class="text-gray-400 mb-4" id="display-username">@alexjohnson</p>
+                        
+                        <div class="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
+                            <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">
+                                <i class="fas fa-code mr-1"></i> <span id="display-role">Full Stack Developer</span>
+                            </span>
+                            <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">
+                                <i class="fas fa-graduation-cap mr-1"></i> <span id="display-year">Final Year</span>
+                            </span>
+                            <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">
+                                <i class="fas fa-map-marker-alt mr-1"></i> <span id="display-location">San Francisco, CA</span>
+                            </span>
+                        </div>
+                        
+                        <div class="flex justify-center md:justify-start space-x-4 mb-6">
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-globe text-xl"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="flex justify-center md:justify-start">
+                            <a href="edit-profile.html" class="bg-primary text-white px-6 py-2 rounded-full hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 glow">
+                                <i class="fas fa-edit mr-2"></i> Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Details -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Personal Information -->
+                <div class="md:col-span-2">
+                    <div class="bg-darker rounded-xl p-6 shadow-lg mb-8 card-hover" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-user-circle text-primary mr-3"></i> Personal Information
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Full Name</h3>
+                                    <p class="text-white text-lg" id="display-fullname">Alexander Johnson</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Email</h3>
+                                    <p class="text-white text-lg" id="display-email">alex.johnson@example.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Phone</h3>
+                                    <p class="text-white text-lg" id="display-phone">(555) 123-4567</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Date of Birth</h3>
+                                    <p class="text-white text-lg" id="display-dob">June 15, 1998</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-gray-400 text-sm mb-1">Bio</h3>
+                                <p class="text-white" id="display-bio">Passionate developer with a focus on creating intuitive and accessible web applications. I love learning new technologies and contributing to open-source projects in my free time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Education -->
+                    <div class="bg-darker rounded-xl p-6 shadow-lg mb-8 card-hover" data-aos="fade-up" data-aos-delay="200">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-graduation-cap text-primary mr-3"></i> Education
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-gray-400 text-sm mb-1">College/University</h3>
+                                <p class="text-white text-lg" id="display-college">Stanford University</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Degree</h3>
+                                    <p class="text-white text-lg" id="display-degree">Bachelor of Science</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Branch/Major</h3>
+                                    <p class="text-white text-lg" id="display-branch">Computer Science</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Year of Study</h3>
+                                    <p class="text-white text-lg" id="display-year-study">4th Year</p>
+                                </div>
+                                <div>
+                                    <h3 class="text-gray-400 text-sm mb-1">Expected Graduation</h3>
+                                    <p class="text-white text-lg" id="display-graduation">May 2024</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills -->
+                    <div class="bg-darker rounded-xl p-6 shadow-lg mb-8 card-hover" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-code text-primary mr-3"></i> Skills
+                        </h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-gray-400 text-sm mb-3">Programming Languages</h3>
+                                <div class="flex flex-wrap gap-2" id="display-languages">
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">JavaScript</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">Python</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">Java</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">C++</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">TypeScript</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-gray-400 text-sm mb-3">Frameworks & Libraries</h3>
+                                <div class="flex flex-wrap gap-2" id="display-frameworks">
+                                    <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">React</span>
+                                    <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Node.js</span>
+                                    <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Express</span>
+                                    <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">Django</span>
+                                    <span class="bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm">TensorFlow</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-gray-400 text-sm mb-3">Tools & Technologies</h3>
+                                <div class="flex flex-wrap gap-2" id="display-tools">
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">Git</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">Docker</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">AWS</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">MongoDB</span>
+                                    <span class="bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="md:col-span-1">
+                    <!-- Stats Card -->
+                    <div class="bg-darker rounded-xl p-6 shadow-lg mb-8 card-hover" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-chart-bar text-primary mr-3"></i> Stats
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Projects</span>
+                                <span class="text-white font-bold">24</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Contributions</span>
+                                <span class="text-white font-bold">156</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Followers</span>
+                                <span class="text-white font-bold">1.2k</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-400">Following</span>
+                                <span class="text-white font-bold">384</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Card -->
+                    <div class="bg-darker rounded-xl p-6 shadow-lg mb-8 card-hover" data-aos="fade-up" data-aos-delay="200">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-envelope text-primary mr-3"></i> Contact
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <a href="mailto:alex.johnson@example.com" class="flex items-center text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-envelope mr-3"></i>
+                                <span id="contact-email">alex.johnson@example.com</span>
+                            </a>
+                            <a href="tel:+15551234567" class="flex items-center text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fas fa-phone mr-3"></i>
+                                <span id="contact-phone">(555) 123-4567</span>
+                            </a>
+                            <a href="#" class="flex items-center text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-github mr-3"></i>
+                                <span id="contact-github">github.com/alexjohnson</span>
+                            </a>
+                            <a href="#" class="flex items-center text-gray-400 hover:text-primary transition-colors duration-300">
+                                <i class="fab fa-linkedin mr-3"></i>
+                                <span id="contact-linkedin">linkedin.com/in/alexjohnson</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Achievements Card -->
+                    <div class="bg-darker rounded-xl p-6 shadow-lg card-hover" data-aos="fade-up" data-aos-delay="300">
+                        <h2 class="text-xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-trophy text-primary mr-3"></i> Achievements
+                        </h2>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="text-yellow-500 text-xl mt-1">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">Hackathon Winner</h3>
+                                    <p class="text-gray-400 text-sm">1st Place at TechCrunch Disrupt 2023</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="text-blue-500 text-xl mt-1">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">AWS Certified</h3>
+                                    <p class="text-gray-400 text-sm">Solutions Architect Associate</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="text-green-500 text-xl mt-1">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-white font-medium">Open Source</h3>
+                                    <p class="text-gray-400 text-sm">Top Contributor 2022</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-darker py-8">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold gradient-text">DevProfile</span>
+                </div>
+                
+                <div class="flex space-x-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">About</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Contact</a>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                &copy; 2024 DevProfile. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            once: false,
+        });
+        
+        // Profile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileMenuTrigger = document.getElementById('profile-menu-trigger');
+            const profileMenu = document.getElementById('profile-menu');
+            
+            profileMenuTrigger.addEventListener('click', function() {
+                profileMenu.classList.toggle('hidden');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!profileMenuTrigger.contains(event.target) && !profileMenu.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+            
+            // Load user data from localStorage if available
+            loadUserData();
+        });
+        
+        // Load user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            
+            // Only update if data exists
+            if (Object.keys(userData).length > 0) {
+                // Personal Information
+                document.getElementById('display-name').textContent = userData.name || 'Alex Johnson';
+                document.getElementById('display-username').textContent = '@' + (userData.username || 'alexjohnson');
+                document.getElementById('display-fullname').textContent = userData.fullName || 'Alexander Johnson';
+                document.getElementById('display-email').textContent = userData.email || 'alex.johnson@example.com';
+                document.getElementById('display-phone').textContent = userData.phone || '(555) 123-4567';
+                document.getElementById('display-dob').textContent = userData.dob || 'June 15, 1998';
+                document.getElementById('display-bio').textContent = userData.bio || 'Passionate developer with a focus on creating intuitive and accessible web applications. I love learning new technologies and contributing to open-source projects in my free time.';
+                document.getElementById('display-role').textContent = userData.role || 'Full Stack Developer';
+                document.getElementById('display-location').textContent = userData.location || 'San Francisco, CA';
+                
+                // Education
+                document.getElementById('display-college').textContent = userData.college || 'Stanford University';
+                document.getElementById('display-degree').textContent = userData.degree || 'Bachelor of Science';
+                document.getElementById('display-branch').textContent = userData.branch || 'Computer Science';
+                document.getElementById('display-year-study').textContent = userData.yearOfStudy || '4th Year';
+                document.getElementById('display-graduation').textContent = userData.graduation || 'May 2024';
+                document.getElementById('display-year').textContent = userData.year || 'Final Year';
+                
+                // Contact information
+                document.getElementById('contact-email').textContent = userData.email || 'alex.johnson@example.com';
+                document.getElementById('contact-phone').textContent = userData.phone || '(555) 123-4567';
+                document.getElementById('contact-github').textContent = userData.github || 'github.com/alexjohnson';
+                document.getElementById('contact-linkedin').textContent = userData.linkedin || 'linkedin.com/in/alexjohnson';
+                
+                // Profile image
+                if (userData.profileImage) {
+                    document.getElementById('profile-image').src = userData.profileImage;
+                }
+                
+                // Skills - if they exist in the data
+                if (userData.languages) {
+                    const languagesContainer = document.getElementById('display-languages');
+                    languagesContainer.innerHTML = '';
+                    userData.languages.forEach(lang => {
+                        const span = document.createElement('span');
+                        span.className = 'bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm';
+                        span.textContent = lang;
+                        languagesContainer.appendChild(span);
+                    });
+                }
+                
+                if (userData.frameworks) {
+                    const frameworksContainer = document.getElementById('display-frameworks');
+                    frameworksContainer.innerHTML = '';
+                    userData.frameworks.forEach(framework => {
+                        const span = document.createElement('span');
+                        span.className = 'bg-secondary bg-opacity-20 text-secondary px-3 py-1 rounded-full text-sm';
+                        span.textContent = framework;
+                        frameworksContainer.appendChild(span);
+                    });
+                }
+                
+                if (userData.tools) {
+                    const toolsContainer = document.getElementById('display-tools');
+                    toolsContainer.innerHTML = '';
+                    userData.tools.forEach(tool => {
+                        const span = document.createElement('span');
+                        span.className = 'bg-primary bg-opacity-20 text-primary px-3 py-1 rounded-full text-sm';
+                        span.textContent = tool;
+                        toolsContainer.appendChild(span);
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

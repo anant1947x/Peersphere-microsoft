@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#00D9C0',
+                        dark: '#121212',
+                        darker: '#0A0A0A',
+                        'gray-dark': '#1E1E1E',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #6C63FF, #00D9C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(0, 217, 192, 0.1));
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .profile-img-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border: 4px solid #6C63FF;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-img-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow {
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow:hover {
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.8);
+        }
+        
+        .page-transition {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-input {
+            background-color: #1E1E1E;
+            border: 1px solid #333;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+            outline: none;
+        }
+        
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 8px;
+            background-color: #1E1E1E;
+            border: 1px solid #333;
+            border-radius: 0.375rem;
+            min-height: 42px;
+        }
+        
+        .tag {
+            display: flex;
+            align-items: center;
+            background-color: rgba(108, 99, 255, 0.2);
+            color: #6C63FF;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+        
+        .tag-close {
+            margin-left: 6px;
+            cursor: pointer;
+        }
+        
+        .tag-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 4px;
+            min-width: 60px;
+        }
+        
+        .tag-input input:focus {
+            outline: none;
+        }
+        
+        .success-animation {
+            animation: successPulse 2s ease-in-out;
+        }
+        
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-dark min-h-screen">
+    <!-- Background Elements -->
+    <div class="fixed inset-0 overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary bg-opacity-10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-20 right-10 w-80 h-80 bg-secondary bg-opacity-10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 1s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-darker bg-opacity-90 backdrop-blur-md py-4 fixed w-full z-50">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold gradient-text">DevProfile</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Home</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Dashboard</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Projects</a>
+                    <a href="#" class="text-white hover:text-primary transition-colors duration-300">Messages</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="text-white hover:text-primary transition-colors duration-300">
+                        <i class="fas fa-moon text-xl"></i>
+                    </button>
+                    <button id="notifications" class="text-white hover:text-primary transition-colors duration-300 relative">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                    </button>
+                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary cursor-pointer" id="profile-menu-trigger">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="w-full h-full object-cover" id="nav-profile-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Profile Menu Dropdown (Hidden by default) -->
+    <div id="profile-menu" class="hidden absolute right-4 top-16 mt-2 w-48 bg-darker rounded-lg shadow-lg py-2 z-50">
+        <a href="index.html" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-user mr-2"></i> My Profile
+        </a>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-cog mr-2"></i> Settings
+        </a>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-question-circle mr-2"></i> Help
+        </a>
+        <div class="border-t border-gray-700 my-1"></div>
+        <a href="#" class="block px-4 py-2 text-white hover:bg-gray-dark transition-colors duration-300">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+        </a>
+    </div>
+
+    <!-- Success Message (Hidden by default) -->
+    <div id="success-message" class="hidden fixed top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>Profile updated successfully!</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-6 pt-24 pb-12 page-transition">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold">Edit Profile</h1>
+                <a href="profile.html" class="text-primary hover:underline flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Profile
+                </a>
+            </div>
+            
+            <form id="profile-form" class="space-y-8">
+                <!-- Profile Image Section -->
+                <div class="bg-darker rounded-xl p-6 shadow-lg" data-aos="fade-up">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-image text-primary mr-3"></i> Profile Image
+                    </h2>
+                    
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="profile-img-container">
+                            <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="w-full h-full object-cover" id="profile-image-preview">
+                        </div>
+                        
+                        <div class="flex-1">
+                            <p class="text-gray-300 mb-4">
+                                Upload a new profile picture. The image should be at least 200x200 pixels.
+                            </p>
+                            
+                            <div class="flex flex-col space-y-4">
+                                <div class="flex items-center space-x-4">
+                                    <button type="button" id="upload-btn" class="bg-primary text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all duration-300">
+                                        <i class="fas fa-upload mr-2"></i> Upload Image
+                                    </button>
+                                    <button type="button" id="remove-image-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300">
+                                        <i class="fas fa-trash-alt mr-2"></i> Remove
+                                    </button>
+                                </div>
+                                <input type="file" id="profile-image-input" accept="image/*" class="hidden">
+                                <p class="text-sm text-gray-400">Supported formats: JPG, PNG, GIF. Max size: 5MB.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Personal Information -->
+                <div class="bg-darker rounded-xl p-6 shadow-lg" data-aos="fade-up" data-aos-delay="100">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-user-circle text-primary mr-3"></i> Personal Information
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="name" class="block text-gray-300 mb-2">Display Name</label>
+                            <input type="text" id="name" name="name" class="w-full px-4 py-2 rounded-lg form-input" placeholder="Display Name">
+                        </div>
+                        <div>
+                            <label for="username" class="block text-gray-300 mb-2">Username</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2 text-gray-500">@</span>
+                                <input type="text" id="username" name="username" class="w-full pl-8 pr-4 py-2 rounded-lg form-input" placeholder="username">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="fullName" class="block text-gray-300 mb-2">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" class="w-full px-4 py-2 rounded-lg form-input" placeholder="Full Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">Email</label>
+                            <input type="email" id="email" name="email" class="w-full px-4 py-2 rounded-lg form-input" placeholder="Email">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="phone" class="block text-gray-300 mb-2">Phone</label>
+                            <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 rounded-lg form-input" placeholder="Phone">
+                        </div>
+                        <div>
+                            <label for="dob" class="block text-gray-300 mb-2">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" class="w-full px-4 py-2 rounded-lg form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="role" class="block text-gray-300 mb-2">Role/Title</label>
+                            <input type="text" id="role" name="role" class="w-full px-4 py-2 rounded-lg form-input" placeholder="e.g. Full Stack Developer">
+                        </div>
+                        <div>
+                            <label for="location" class="block text-gray-300 mb-2">Location</label>
+                            <input type="text" id="location" name="location" class="w-full px-4 py-2 rounded-lg form-input" placeholder="City, Country">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="bio" class="block text-gray-300 mb-2">Bio</label>
+                        <textarea id="bio" name="bio" rows="4" class="w-full px-4 py-2 rounded-lg form-input" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Education -->
+                <div class="bg-darker rounded-xl p-6 shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-graduation-cap text-primary mr-3"></i> Education
+                    </h2>
+                    
+                    <div class="mb-6">
+                        <label for="college" class="block text-gray-300 mb-2">College/University</label>
+                        <input type="text" id="college" name="college" class="w-full px-4 py-2 rounded-lg form-input" placeholder="College/University">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="degree" class="block text-gray-300 mb-2">Degree</label>
+                            <input type="text" id="degree" name="degree" class="w-full px-4 py-2 rounded-lg form-input" placeholder="e.g. Bachelor of Science">
+                        </div>
+                        <div>
+                            <label for="branch" class="block text-gray-300 mb-2">Branch/Major</label>
+                            <input type="text" id="branch" name="branch" class="w-full px-4 py-2 rounded-lg form-input" placeholder="e.g. Computer Science">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="yearOfStudy" class="block text-gray-300 mb-2">Year of Study</label>
+                            <select id="yearOfStudy" name="yearOfStudy" class="w-full px-4 py-2 rounded-lg form-input">
+                                <option value="">Select Year</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                                <option value="5th Year">5th Year</option>
+                                <option value="Final Year">Final Year</option>
+                                <option value="Graduated">Graduated</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="graduation" class="block text-gray-300 mb-2">Expected Graduation</label>
+                            <input type="text" id="graduation" name="graduation" class="w-full px-4 py-2 rounded-lg form-input" placeholder="e.g. May 2024">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills -->
+                <div class="bg-darker rounded-xl p-6 shadow-lg" data-aos="fade-up" data-aos-delay="300">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-code text-primary mr-3"></i> Skills
+                    </h2>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-300 mb-2">Programming Languages</label>
+                        <div class="tag-input" id="languages-container">
+                            <input type="text" id="languages-input" placeholder="Add language and press Enter">
+                        </div>
+                        <p class="text-sm text-gray-400 mt-1">Press Enter to add a new language</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-300 mb-2">Frameworks & Libraries</label>
+                        <div class="tag-input" id="frameworks-container">
+                            <input type="text" id="frameworks-input" placeholder="Add framework and press Enter">
+                        </div>
+                        <p class="text-sm text-gray-400 mt-1">Press Enter to add a new framework</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">Tools & Technologies</label>
+                        <div class="tag-input" id="tools-container">
+                            <input type="text" id="tools-input" placeholder="Add tool and press Enter">
+                        </div>
+                        <p class="text-sm text-gray-400 mt-1">Press Enter to add a new tool</p>
+                    </div>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="bg-darker rounded-xl p-6 shadow-lg" data-aos="fade-up" data-aos-delay="400">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-link text-primary mr-3"></i> Social Links
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="github" class="block text-gray-300 mb-2">GitHub</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2 text-gray-500"><i class="fab fa-github"></i></span>
+                                <input type="text" id="github" name="github" class="w-full pl-10 pr-4 py-2 rounded-lg form-input" placeholder="github.com/username">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="linkedin" class="block text-gray-300 mb-2">LinkedIn</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2 text-gray-500"><i class="fab fa-linkedin"></i></span>
+                                <input type="text" id="linkedin" name="linkedin" class="w-full pl-10 pr-4 py-2 rounded-lg form-input" placeholder="linkedin.com/in/username">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="twitter" class="block text-gray-300 mb-2">Twitter</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2 text-gray-500"><i class="fab fa-twitter"></i></span>
+                                <input type="text" id="twitter" name="twitter" class="w-full pl-10 pr-4 py-2 rounded-lg form-input" placeholder="twitter.com/username">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="website" class="block text-gray-300 mb-2">Personal Website</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2 text-gray-500"><i class="fas fa-globe"></i></span>
+                                <input type="text" id="website" name="website" class="w-full pl-10 pr-4 py-2 rounded-lg form-input" placeholder="https://yourwebsite.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex justify-end space-x-4">
+                    <a href="index.html" class="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-all duration-300">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-primary text-white px-8 py-3 rounded-lg hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 glow">
+                       <a href="profile.html"> <i class="fas fa-save mr-2"></i> Save Changes </a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-darker py-8">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold gradient-text">DevProfile</span>
+                </div>
+                
+                <div class="flex space-x-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">About</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">Contact</a>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                &copy; 2024 DevProfile. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animation library
+        AOS.init({
+            duration: 800,
+            once: false,
+        });
+        
+        // Profile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileMenuTrigger = document.getElementById('profile-menu-trigger');
+            const profileMenu = document.getElementById('profile-menu');
+            
+            profileMenuTrigger.addEventListener('click', function() {
+                profileMenu.classList.toggle('hidden');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!profileMenuTrigger.contains(event.target) && !profileMenu.contains(event.target)) {
+                    profileMenu.classList.add('hidden');
+                }
+            });
+            
+            // Load user data from localStorage if available
+            loadUserData();
+            
+            // Initialize tag inputs
+            initTagInput('languages-input', 'languages-container');
+            initTagInput('frameworks-input', 'frameworks-container');
+            initTagInput('tools-input', 'tools-container');
+            
+            // Handle profile image upload
+            initProfileImageUpload();
+            
+            // Handle form submission
+            document.getElementById('profile-form').addEventListener('submit', saveUserData);
+        });
+        
+        // Load user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            
+            // Only populate if data exists
+            if (Object.keys(userData).length > 0) {
+                // Personal Information
+                document.getElementById('name').value = userData.name || '';
+                document.getElementById('username').value = userData.username || '';
+                document.getElementById('fullName').value = userData.fullName || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('dob').value = userData.dob || '';
+                document.getElementById('bio').value = userData.bio || '';
+                document.getElementById('role').value = userData.role || '';
+                document.getElementById('location').value = userData.location || '';
+                
+                // Education
+                document.getElementById('college').value = userData.college || '';
+                document.getElementById('degree').value = userData.degree || '';
+                document.getElementById('branch').value = userData.branch || '';
+                document.getElementById('yearOfStudy').value = userData.yearOfStudy || '';
+                document.getElementById('graduation').value = userData.graduation || '';
+                
+                // Social Links
+                document.getElementById('github').value = userData.github || '';
+                document.getElementById('linkedin').value = userData.linkedin || '';
+                document.getElementById('twitter').value = userData.twitter || '';
+                document.getElementById('website').value = userData.website || '';
+                
+                // Profile image
+                if (userData.profileImage) {
+                    document.getElementById('profile-image-preview').src = userData.profileImage;
+                    document.getElementById('nav-profile-image').src = userData.profileImage;
+                }
+                
+                // Skills - populate tags
+                if (userData.languages) {
+                    userData.languages.forEach(lang => {
+                        addTag(lang, 'languages-container');
+                    });
+                }
+                
+                if (userData.frameworks) {
+                    userData.frameworks.forEach(framework => {
+                        addTag(framework, 'frameworks-container');
+                    });
+                }
+                
+                if (userData.tools) {
+                    userData.tools.forEach(tool => {
+                        addTag(tool, 'tools-container');
+                    });
+                }
+            }
+        }
+        
+        // Save user data to localStorage
+        function saveUserData(event) {
+            event.preventDefault();
+            
+            // Collect form data
+            const userData = {
+                // Personal Information
+                name: document.getElementById('name').value,
+                username: document.getElementById('username').value,
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                dob: document.getElementById('dob').value,
+                bio: document.getElementById('bio').value,
+                role: document.getElementById('role').value,
+                location: document.getElementById('location').value,
+                
+                // Education
+                college: document.getElementById('college').value,
+                degree: document.getElementById('degree').value,
+                branch: document.getElementById('branch').value,
+                yearOfStudy: document.getElementById('yearOfStudy').value,
+                graduation: document.getElementById('graduation').value,
+                year: document.getElementById('yearOfStudy').value, // For display on profile page
+                
+                // Social Links
+                github: document.getElementById('github').value,
+                linkedin: document.getElementById('linkedin').value,
+                twitter: document.getElementById('twitter').value,
+                website: document.getElementById('website').value,
+                
+                // Profile image
+                profileImage: document.getElementById('profile-image-preview').src,
+                
+                // Skills - collect tags
+                languages: getTagsFromContainer('languages-container'),
+                frameworks: getTagsFromContainer('frameworks-container'),
+                tools: getTagsFromContainer('tools-container')
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Show success message
+            const successMessage = document.getElementById('success-message');
+            successMessage.classList.remove('hidden');
+            successMessage.classList.add('success-animation');
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.classList.add('hidden');
+                
+                // Redirect to profile page
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+        
+        // Initialize tag input functionality
+        function initTagInput(inputId, containerId) {
+            const input = document.getElementById(inputId);
+            const container = document.getElementById(containerId);
+            
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && this.value.trim() !== '') {
+                    event.preventDefault();
+                    addTag(this.value.trim(), containerId);
+                    this.value = '';
+                }
+            });
+        }
+        
+        // Add a tag to the container
+        function addTag(text, containerId) {
+            const container = document.getElementById(containerId);
+            const input = container.querySelector('input');
+            
+            // Create tag element
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                ${text}
+                <span class="tag-close" onclick="removeTag(this)">
+                    <i class="fas fa-times"></i>
+                </span>
+            `;
+            
+            // Insert tag before the input
+            container.insertBefore(tag, input);
+        }
+        
+        // Remove a tag
+        function removeTag(element) {
+            const tag = element.parentElement;
+            tag.remove();
+        }
+        
+        // Get all tags from a container
+        function getTagsFromContainer(containerId) {
+            const container = document.getElementById(containerId);
+            const tags = container.querySelectorAll('.tag');
+            
+            return Array.from(tags).map(tag => {
+                // Get text content without the close button
+                return tag.textContent.trim();
+            });
+        }
+        
+        // Initialize profile image upload
+        function initProfileImageUpload() {
+            const uploadBtn = document.getElementById('upload-btn');
+            const imageInput = document.getElementById('profile-image-input');
+            const imagePreview = document.getElementById('profile-image-preview');
+            const removeBtn = document.getElementById('remove-image-btn');
+            
+            uploadBtn.addEventListener('click', function() {
+                imageInput.click();
+            });
+            
+            imageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        document.getElementById('nav-profile-image').src = e.target.result;
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            removeBtn.addEventListener('click', function() {
+                imagePreview.src = 'https://i.pravatar.cc/150?img=11';
+                document.getElementById('nav-profile-image').src = 'https://i.pravatar.cc/150?img=11';
+                imageInput.value = '';
+            });
+        }
+    </script>
+</body>
+</html>

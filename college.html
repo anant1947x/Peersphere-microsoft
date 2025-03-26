@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Chatroom</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            secondary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Custom styles */
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: pulse 3s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .gradient-text {
+      background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .gradient-button {
+      background-image: linear-gradient(to right, #3b82f6, #8b5cf6);
+      transition: all 0.3s;
+    }
+
+    .gradient-button:hover {
+      background-image: linear-gradient(to right, #2563eb, #7c3aed);
+    }
+
+    .purple-gradient-button {
+      background-image: linear-gradient(to right, #8b5cf6, #ec4899);
+      transition: all 0.3s;
+    }
+
+    .purple-gradient-button:hover {
+      background-image: linear-gradient(to right, #7c3aed, #db2777);
+    }
+
+    .outlined-button {
+      border: 1px solid #4b5563;
+      transition: all 0.3s;
+    }
+
+    .outlined-button:hover {
+      border-color: #9ca3af;
+    }
+
+    .message-bubble {
+      border-radius: 1rem;
+      padding: 0.75rem;
+      max-width: 80%;
+      word-break: break-word;
+    }
+
+    .message-bubble-user {
+      background-image: linear-gradient(to right, #2563eb, #3b82f6);
+      color: white;
+      margin-left: auto;
+    }
+
+    .message-bubble-other {
+      background-color: #1f2937;
+      color: white;
+      margin-right: auto;
+    }
+
+    .typing-indicator span {
+      display: inline-block;
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: #9ca3af;
+      border-radius: 50%;
+      margin: 0 0.125rem;
+      animation: typing 1.4s infinite both;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0% {
+        opacity: 0.4;
+        transform: translateY(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-4px);
+      }
+      100% {
+        opacity: 0.4;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Hide all sections by default */
+    section {
+      display: none;
+    }
+
+    /* Show active section */
+    section.active {
+      display: block;
+    }
+
+    /* Scrollbar styling */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #4b5563;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="dark">
+  <!-- Particle Background -->
+  <div id="particles" class="fixed inset-0 z-0"></div>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <a href="#" class="flex items-center" onclick="showSection('select-college')">
+          <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl">
+            P
+          </div>
+          <span class="ml-2 text-xl font-bold gradient-text">PeerSphere</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#features" class="text-gray-300 hover:text-white transition-colors">Features</a>
+          <a href="#about" class="text-gray-300 hover:text-white transition-colors">About</a>
+          <a href="#connect" class="text-gray-300 hover:text-white transition-colors">Connect</a>
+          <a href="#premium" class="text-gray-300 hover:text-white transition-colors">Premium</a>
+        </div>
+
+        <div class="hidden md:block">
+          <button class="gradient-button px-6 py-2 rounded-full">Join Now</button>
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-button" class="text-gray-300 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="md:hidden bg-gray-900 hidden animate-fade-in">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <a href="#features" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">Features</a>
+        <a href="#about" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">About</a>
+        <a href="#connect" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">Connect</a>
+        <a href="#premium" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">Premium</a>
+        <div class="pt-2">
+          <button class="gradient-button w-full py-2 rounded-full">Join Now</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- College Selection Section -->
+  <section id="select-college" class="active min-h-screen bg-black text-white relative">
+    <main class="container mx-auto px-4 pt-24 pb-16">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2 text-center">
+          Select Your College
+        </h1>
+        <p class="text-gray-400 text-center mb-8">
+          Choose your institution to connect with peers or explore other colleges
+        </p>
+        
+        <div class="relative mb-8">
+          <input
+            type="text"
+            id="college-search"
+            placeholder="Search for your college..."
+            class="w-full bg-gray-900 border border-gray-700 rounded-lg pl-10 py-6 text-white"
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- College Cards -->
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'Harvard University')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">H</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  Harvard University
+                </h3>
+                <p class="text-sm text-gray-400">
+                  22,947 students
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'Stanford University')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-red-500 to-red-700 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">S</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  Stanford University
+                </h3>
+                <p class="text-sm text-gray-400">
+                  17,381 students
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'MIT')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-gray-500 to-gray-700 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">M</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  MIT
+                </h3>
+                <p class="text-sm text-gray-400">
+                  11,934 students
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'UC Berkeley')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-yellow-500 to-yellow-700 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">B</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  University of California, Berkeley
+                </h3>
+                <p class="text-sm text-gray-400">
+                  45,057 students
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'University of Michigan')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-yellow-500 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">M</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  University of Michigan
+                </h3>
+                <p class="text-sm text-gray-400">
+                  48,090 students
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bg-gray-900 border border-gray-800 hover:border-blue-500 transition-all duration-300 p-4 rounded-lg h-full cursor-pointer group" onclick="showSection('chatroom-options', 'NYU')">
+            <div class="flex items-center space-x-4">
+              <div class="relative h-16 w-16 rounded-full overflow-hidden bg-gray-800 flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-700 opacity-70"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-white font-bold text-xl">N</div>
+              </div>
+              <div>
+                <h3 class="font-medium text-white group-hover:text-blue-400 transition-colors">
+                  New York University
+                </h3>
+                <p class="text-sm text-gray-400">
+                  53,576 students
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- Chatroom Options Section -->
+  <section id="chatroom-options" class="min-h-screen bg-black text-white relative">
+    <main class="container mx-auto px-4 pt-24 pb-16">
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2">
+          Welcome to <span id="selected-college-name" class="gradient-text">University</span>
+        </h1>
+        <p class="text-gray-400 mb-12">
+          Choose a chatroom to start connecting with peers
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+          <div 
+            class="bg-gray-900 border border-gray-800 hover:border-blue-500 rounded-xl p-8 flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105 cursor-pointer"
+            onclick="showSection('chatroom', 'college')"
+          >
+            <div class="h-20 w-20 rounded-full bg-blue-900/30 flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h2 class="text-xl font-semibold mb-2">College Chatroom</h2>
+            <p class="text-gray-400 mb-6">
+              Connect exclusively with students from <span class="college-name">your college</span>
+            </p>
+            <button class="gradient-button w-full py-3 rounded-full">
+              Join College Chat
+            </button>
+          </div>
+          
+          <div 
+            class="bg-gray-900 border border-gray-800 hover:border-purple-500 rounded-xl p-8 flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105 cursor-pointer"
+            onclick="showSection('chatroom', 'global')"
+          >
+            <div class="h-20 w-20 rounded-full bg-purple-900/30 flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 class="text-xl font-semibold mb-2">Global College Chatroom</h2>
+            <p class="text-gray-400 mb-6">
+              Connect with students from all colleges around the world
+            </p>
+            <button class="purple-gradient-button w-full py-3 rounded-full">
+              Join Global Chat
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- Chatroom Section -->
+  <section id="chatroom" class="min-h-screen bg-black text-white relative flex flex-col">
+    <!-- Chat header -->
+    <div class="bg-gray-900/80 backdrop-blur-md border-b border-gray-800 py-3 px-4 flex items-center justify-between sticky top-16 z-10 mt-16">
+      <div class="flex items-center">
+        <button onclick="goBack()" class="mr-3 p-2 rounded-full hover:bg-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        </button>
+        
+        <div class="flex items-center">
+          <div id="chatroom-icon" class="h-10 w-10 rounded-full bg-gray-800 flex items-center justify-center mr-3">
+            <!-- Icon will be inserted by JS -->
+          </div>
+          <div>
+            <h2 id="chatroom-title" class="font-medium">
+              <!-- Title will be inserted by JS -->
+            </h2>
+            <p id="chatroom-subtitle" class="text-xs text-gray-400">
+              <!-- Subtitle will be inserted by JS -->
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <button 
+        id="toggle-user-list"
+        class="p-2 rounded-full hover:bg-gray-800"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Chat container -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- Messages -->
+      <div id="messages-container" class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+        <div class="max-w-4xl mx-auto space-y-4">
+          <!-- Messages will be inserted by JS -->
+        </div>
+      </div>
+      
+      <!-- User list sidebar -->
+      <div id="user-list" class="w-64 bg-gray-900 border-l border-gray-800 overflow-y-auto animate-fade-in hidden">
+        <div class="p-4">
+          <h3 class="text-sm font-medium text-gray-400 mb-4">Online Users (5)</h3>
+          
+          <div class="space-y-3">
+            <!-- User list items will be inserted by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Message input -->
+    <div class="bg-gray-900/80 backdrop-blur-md border-t border-gray-800 p-4">
+      <div class="max-w-4xl mx-auto flex items-center space-x-2">
+        <button class="p-2 rounded-full hover:bg-gray-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+          </svg>
+        </button>
+        
+        <div class="flex-1 relative">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type a message..."
+            class="w-full bg-gray-800 border border-gray-700 rounded-full pl-4 pr-10 py-3 text-white"
+          />
+          <button class="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+        </div>
+        
+        <button 
+          id="send-message"
+          class="rounded-full bg-blue-600 hover:bg-blue-700 h-10 w-10 p-0 flex items-center justify-center"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Create particles
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const colors = ["#3B82F6", "#8B5CF6", "#10B981", "#F43F5E", "#06B6D4"];
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        
+        // Random properties
+        const size = Math.random() * 4 + 1;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const animationDelay = Math.random() * 5;
+        
+        // Apply styles
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = color;
+        particle.style.left = `${left}%`;
+        particle.style.top = `${top}%`;
+        particle.style.animationDelay = `${animationDelay}s`;
+        particle.style.opacity = (Math.random() * 0.5 + 0.3).toString();
+        
+        container.appendChild(particle);
+      }
+    }
+
+    // Initialize particles
+    createParticles();
+
+    // Toggle mobile menu
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Navigation between sections
+    let currentCollege = '';
+    let currentChatroomType = '';
+    
+    function showSection(sectionId, param) {
+      // Hide all sections
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      const section = document.getElementById(sectionId);
+      section.classList.add('active');
+      
+      // Handle specific section logic
+      if (sectionId === 'chatroom-options' && param) {
+        currentCollege = param;
+        document.getElementById('selected-college-name').textContent = param;
+        document.querySelectorAll('.college-name').forEach(el => {
+          el.textContent = param;
+        });
+      }
+      
+      if (sectionId === 'chatroom') {
+        currentChatroomType = param;
+        setupChatroom(currentCollege, currentChatroomType);
+      }
+    }
+    
+    function goBack() {
+      if (currentChatroomType) {
+        showSection('chatroom-options', currentCollege);  {
+      if (currentChatroomType) {
+        showSection('chatroom-options', currentCollege);
+        currentChatroomType = '';
+      } else if (currentCollege) {
+        showSection('select-college');
+        currentCollege = '';
+      }
+    }
+}}
+    // Setup chatroom
+    function setupChatroom(college, type) {
+      const chatroomTitle = document.getElementById('chatroom-title');
+      const chatroomSubtitle = document.getElementById('chatroom-subtitle');
+      const chatroomIcon = document.getElementById('chatroom-icon');
+      
+      if (type === 'global') {
+        chatroomTitle.textContent = 'Global College Chatroom';
+        chatroomSubtitle.textContent = 'Students from all colleges';
+        chatroomIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        `;
+      } else {
+        chatroomTitle.textContent = `${college} Chatroom`;
+        chatroomSubtitle.textContent = 'College students only';
+        chatroomIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        `;
+      }
+      
+      // Load messages
+      loadMessages();
+      
+      // Load users
+      loadUsers();
+    }
+    
+    // Toggle user list
+    document.getElementById('toggle-user-list').addEventListener('click', () => {
+      document.getElementById('user-list').classList.toggle('hidden');
+    });
+    
+    // Sample messages data
+    const sampleMessages = [
+      {
+        id: 1,
+        text: "Hey everyone! Who's taking CS301 this semester?",
+        sender: {
+          id: 101,
+          name: "Alex Johnson",
+          avatar: "A",
+          college: "Harvard University"
+        },
+        timestamp: new Date(Date.now() - 3600000 * 2),
+        isCurrentUser: false
+      },
+      {
+        id: 2,
+        text: "I am! The first assignment is pretty challenging.",
+        sender: {
+          id: 102,
+          name: "Taylor Smith",
+          avatar: "T",
+          college: "MIT"
+        },
+        timestamp: new Date(Date.now() - 3600000),
+        isCurrentUser: false
+      },
+      {
+        id: 3,
+        text: "I'm taking it too. Maybe we could form a study group?",
+        sender: {
+          id: 103,
+          name: "Jordan Lee",
+          avatar: "J",
+          college: "Stanford University"
+        },
+        timestamp: new Date(Date.now() - 1800000),
+        isCurrentUser: true
+      },
+      {
+        id: 4,
+        text: "@Jordan That's a great idea! I'm definitely interested.",
+        sender: {
+          id: 101,
+          name: "Alex Johnson",
+          avatar: "A",
+          college: "Harvard University"
+        },
+        timestamp: new Date(Date.now() - 900000),
+        isCurrentUser: false
+      },
+      {
+        id: 5,
+        text: "Count me in too! When are you all free to meet?",
+        sender: {
+          id: 104,
+          name: "Casey Wilson",
+          avatar: "C",
+          college: "University of Michigan"
+        },
+        timestamp: new Date(Date.now() - 600000),
+        isCurrentUser: false
+      }
+    ];
+    
+    // Sample online users
+    const onlineUsers = [
+      {
+        id: 101,
+        name: "Alex Johnson",
+        avatar: "A",
+        college: "Harvard University",
+        status: "online"
+      },
+      {
+        id: 102,
+        name: "Taylor Smith",
+        avatar: "T",
+        college: "MIT",
+        status: "online"
+      },
+      {
+        id: 103,
+        name: "Jordan Lee",
+        avatar: "J",
+        college: "Stanford University",
+        status: "online"
+      },
+      {
+        id: 104,
+        name: "Casey Wilson",
+        avatar: "C",
+        college: "University of Michigan",
+        status: "online"
+      },
+      {
+        id: 105,
+        name: "Morgan Rivera",
+        avatar: "M",
+        college: "NYU",
+        status: "away"
+      }
+    ];
+    
+    // Load messages
+    function loadMessages() {
+      const messagesContainer = document.getElementById('messages-container').querySelector('div');
+      messagesContainer.innerHTML = '';
+      
+      sampleMessages.forEach(message => {
+        const messageEl = createMessageElement(message);
+        messagesContainer.appendChild(messageEl);
+      });
+      
+      // Add typing indicator after a delay
+      setTimeout(() => {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'flex items-start space-x-2 animate-fade-in';
+        typingIndicator.innerHTML = `
+          <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-white font-medium">
+            T
+          </div>
+          <div class="bg-gray-800 rounded-2xl p-3 max-w-[80%]">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        `;
+        messagesContainer.appendChild(typingIndicator);
+        
+        // Scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Add new message after typing
+        setTimeout(() => {
+          messagesContainer.removeChild(typingIndicator);
+          
+          const newMsg = {
+            id: 6,
+            text: "I'm free on Thursdays after 4pm. Would that work for everyone?",
+            sender: {
+              id: 102,
+              name: "Taylor Smith",
+              avatar: "T",
+              college: "MIT"
+            },
+            timestamp: new Date(),
+            isCurrentUser: false
+          };
+          
+          const messageEl = createMessageElement(newMsg);
+          messagesContainer.appendChild(messageEl);
+          
+          // Scroll to bottom
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 3000);
+      }, 2000);
+    }
+    
+    // Create message element
+    function createMessageElement(message) {
+      const messageEl = document.createElement('div');
+      messageEl.className = `flex items-start space-x-2 animate-fade-in ${message.isCurrentUser ? 'justify-end' : ''}`;
+      
+      // Process text to highlight mentions
+      const processedText = message.text.replace(/@(\w+)/g, '<span class="text-blue-400">@$1</span>');
+      
+      // Format time
+      const formattedTime = message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      
+      if (message.isCurrentUser) {
+        messageEl.innerHTML = `
+          <div class="flex flex-col max-w-[80%]">
+            <div class="flex items-end group">
+              <div class="message-bubble message-bubble-user">
+                ${processedText}
+                <div class="text-xs opacity-70 mt-1">
+                  ${formattedTime}
+                </div>
+              </div>
+              
+              <div class="flex items-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button class="p-1 rounded-full text-gray-400 hover:text-gray-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                
+                <button class="p-1 rounded-full text-gray-400 hover:text-gray-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-white font-medium">
+            ${message.sender.avatar}
+          </div>
+        `;
+      } else {
+        messageEl.innerHTML = `
+          <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-white font-medium">
+            ${message.sender.avatar}
+          </div>
+          
+          <div class="flex flex-col max-w-[80%]">
+            <div class="flex items-center mb-1">
+              <span class="text-sm font-medium">${message.sender.name}</span>
+              <span class="text-xs text-gray-400 ml-2">${message.sender.college}</span>
+            </div>
+            
+            <div class="flex items-end group">
+              <div class="message-bubble message-bubble-other">
+                ${processedText}
+                <div class="text-xs opacity-70 mt-1">
+                  ${formattedTime}
+                </div>
+              </div>
+              
+              <div class="flex items-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button class="p-1 rounded-full text-gray-400 hover:text-gray-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </button>
+                
+                <button class="p-1 rounded-full text-gray-400 hover:text-gray-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      return messageEl;
+    }
+    
+    // Load users
+    function loadUsers() {
+      const userListContainer = document.getElementById('user-list').querySelector('.space-y-3');
+      userListContainer.innerHTML = '';
+      
+      onlineUsers.forEach(user => {
+        const userEl = document.createElement('div');
+        userEl.className = 'flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800 transition-colors cursor-pointer';
+        userEl.innerHTML = `
+          <div class="relative">
+            <div class="h-8 w-8 rounded-full bg-gray-800 flex items-center justify-center text-white font-medium">
+              ${user.avatar}
+            </div>
+            <span class="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-gray-900 ${user.status === 'online' ? 'bg-green-500' : 'bg-yellow-500'}"></span>
+          </div>
+          
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium truncate">${user.name}</p>
+            <p class="text-xs text-gray-400 truncate">${user.college}</p>
+          </div>
+        `;
+        
+        userListContainer.appendChild(userEl);
+      });
+    }
+    
+    // Send message
+    document.getElementById('send-message').addEventListener('click', sendMessage);
+    document.getElementById('message-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    
+    function sendMessage() {
+      const input = document.getElementById('message-input');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      const messagesContainer = document.getElementById('messages-container').querySelector('div');
+      
+      const newMsg = {
+        id: Date.now(),
+        text: text,
+        sender: {
+          id: 103,
+          name: "Jordan Lee",
+          avatar: "J",
+          college: "Stanford University"
+        },
+        timestamp: new Date(),
+        isCurrentUser: true
+      };
+      
+      const messageEl = createMessageElement(newMsg);
+      messagesContainer.appendChild(messageEl);
+      
+      // Clear input
+      input.value = '';
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+  </script>
+</body>
+</html>

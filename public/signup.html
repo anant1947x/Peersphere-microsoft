@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerSphere - Sign Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6C63FF',
+                        secondary: '#00D9C0',
+                        tertiary: '#FF3D71',
+                        dark: '#0A0A0A',
+                        darker: '#050505',
+                        light: '#F0F0F0'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                        'shake': 'shake 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        morph: {
+                            '0%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' },
+                            '50%': { borderRadius: '30% 60% 70% 40%/50% 60% 30% 60%' },
+                            '100%': { borderRadius: '60% 40% 30% 70%/60% 30% 70% 40%' }
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+                            '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+        }
+        
+        /* Animated Gradient Background */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #6C63FF, #00D9C0, #FF3D71, #6C63FF);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradient-text 5s ease infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Morphing Blob */
+        .blob {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite;
+            background: linear-gradient(45deg, #6C63FF, #00D9C0);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        /* Button Hover Effects */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #6C63FF, #00D9C0, #FF3D71);
+            background-size: 200% auto;
+            z-index: -1;
+            transition: background-position 0.5s ease;
+        }
+        
+        .btn-hover:hover::before {
+            background-position: 100% 0;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* Glow Effect */
+        .glow-on-hover {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .glow-on-hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            border-radius: inherit;
+            box-shadow: 0 0 20px 5px rgba(108, 99, 255, 0.5);
+        }
+        
+        .glow-on-hover:hover::after {
+            opacity: 1;
+        }
+        
+        /* Card Hover */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(108, 99, 255, 0.1), transparent 70%);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+            border-radius: inherit;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 
+                0 20px 25px -5px rgba(108, 99, 255, 0.2), 
+                0 10px 10px -5px rgba(0, 217, 192, 0.1),
+                0 0 15px rgba(108, 99, 255, 0.4);
+        }
+        
+        .card-hover:hover::before {
+            opacity: 1;
+        }
+        
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: rgba(240, 240, 240, 0.6);
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(240, 240, 240, 0.2);
+        }
+        
+        .divider::before {
+            margin-right: 0.5em;
+        }
+        
+        .divider::after {
+            margin-left: 0.5em;
+        }
+        
+        /* Input Focus */
+        .input-focus:focus {
+            border-color: #6C63FF;
+            box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.2);
+        }
+        
+        /* Captcha Text */
+        .captcha-text {
+            font-family: monospace;
+            letter-spacing: 0.2em;
+            user-select: none;
+        }
+        
+        .captcha-char {
+            display: inline-block;
+            margin: 0 2px;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Error and Success Messages */
+        .error-message {
+            color: #FF3D71;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .success-message {
+            color: #00D9C0;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Password Requirements */
+        .password-requirements {
+            color: #6C63FF;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            transition: color 0.3s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-darker text-light">
+    <div class="w-full max-w-lg">
+        <div class="relative p-6 md:p-8 rounded-2xl card-hover bg-dark border border-primary/20">
+            <!-- Decorative Blobs -->
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary/10 rounded-full blur-xl"></div>
+            
+            <!-- Signup Form Container -->
+            <div class="relative z-10">
+                <!-- Logo and Title -->
+                <div class="text-center mb-6">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="w-12 h-12 blob flex items-center justify-center glow-on-hover floating">
+                            <span class="text-dark font-bold text-xl">P</span>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold gradient-text">Join PeerSphere</h2>
+                    <p class="text-light/60 mt-2">Create your account to connect with students across colleges</p>
+                </div>
+                
+                <!-- Signup Form -->
+                <form id="signupForm" class="space-y-4">
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-light/80 mb-1">
+                            Full Name
+                        </label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            class="w-full px-4 py-2.5 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                            required
+                        />
+                        <div id="fullNameError" class="error-message">Please fill out this field.</div>
+                    </div>
+
+                    <!-- Inline fields for username and email -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-light/80 mb-1">
+                                Username
+                            </label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="w-full px-4 py-2.5 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                                required
+                            />
+                            <div id="usernameError" class="error-message">Please fill out this field.</div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-light/80 mb-1">
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="w-full px-4 py-2.5 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                                required
+                            />
+                            <div id="emailError" class="error-message">Please enter a valid email address.</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-light/80 mb-1">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="w-full px-4 py-2.5 bg-darker border border-light/10 rounded-lg focus:outline-none input-focus text-light"
+                                required
+                            />
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-light/40 transition-colors duration-300 hover:text-light/80"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-off-icon hidden">
+                                    <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                                    <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                                    <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                                    <line x1="2" x2="22" y1="2" y2="22"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="passwordError" class="error-message">Password does not meet requirements.</div>
+                        <div class="password-requirements text-xs text-light/60">
+                            Must be at least 8 characters with letters, numbers, and special characters
+                        </div>
+                    </div>
+
+                    <div id="formError" class="error-message text-center"></div>
+                    <div id="formSuccess" class="success-message text-center"></div>
+
+                    <button
+                        type="submit"
+                        class="w-full py-3 rounded-lg btn-hover text-dark font-semibold mt-4"
+                    >
+                        <span class="relative z-10">Create Account</span>
+                    </button>
+                    
+                    <!-- Sign In Link -->
+                    <div class="text-center mt-4">
+                        <p class="text-light/60">
+                            Already have an account? 
+                            <a href="login.html" class="text-primary hover:text-secondary transition-colors font-medium">Sign in</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility with animation
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.querySelector('.eye-icon');
+            const eyeOffIcon = document.querySelector('.eye-off-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.add('hidden');
+                eyeOffIcon.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('hidden');
+                eyeOffIcon.classList.add('hidden');
+            }
+        });
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+            document.getElementById('formError').textContent = '';
+            document.getElementById('formSuccess').textContent = '';
+            
+            // Basic validation
+            let isValid = true;
+            
+            // Validate full name
+            const fullName = document.getElementById('fullName').value;
+            const fullNameError = document.getElementById('fullNameError');
+            if (!fullName) {
+                fullNameError.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate username
+            const username = document.getElementById('username').value;
+            const usernameError = document.getElementById('usernameError');
+            if (!username) {
+                usernameError.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate email
+            const email = document.getElementById('email').value;
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /\S+@\S+\.\S+/;
+            if (!email || !emailRegex.test(email)) {
+                emailError.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate password
+            const password = document.getElementById('password').value;
+            const passwordError = document.getElementById('passwordError');
+            if (!password || password.length < 8) {
+                passwordError.classList.add('show');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                try {
+                    const formError = document.getElementById('formError');
+                    const formSuccess = document.getElementById('formSuccess');
+                    
+                    // Show loading state
+                    const submitButton = document.querySelector('button[type="submit"]');
+                    const originalButtonText = submitButton.innerHTML;
+                    submitButton.innerHTML = '<span class="relative z-10">Processing...</span>';
+                    submitButton.disabled = true;
+                    
+                    console.log('Sending signup request with data:', { fullName, username, email, password: '********' });
+                    
+                    const response = await fetch("http://localhost:3000/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fullName, username, email, password }),
+});
+                    // Restore button state
+                    submitButton.innerHTML = originalButtonText;
+                    submitButton.disabled = false;
+
+                    // Try to parse the response as JSON
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (jsonError) {
+                        console.error('Error parsing JSON response:', jsonError);
+                        throw new Error('Invalid server response format');
+                    }
+
+                    console.log('Server response:', response.status, data);
+
+                    if (response.ok) {
+                        formSuccess.textContent = 'Signup Successful! Redirecting to login...';
+                        formSuccess.classList.add('show');
+                        
+                        // Clear form
+                        document.getElementById('signupForm').reset();
+                        
+                        // Redirect after a short delay
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    } else {
+                        formError.textContent = data.error || 'Signup failed. Please try again.';
+                        formError.classList.add('show');
+                    }
+                } catch (error) {
+                    console.error('Signup error details:', error);
+                    const formError = document.getElementById('formError');
+                    formError.textContent = `Error: ${error.message || 'Connection failed. Please check if the server is running.'}`;
+                    formError.classList.add('show');
+                    
+                    // Restore button if needed
+                    const submitButton = document.querySelector('button[type="submit"]');
+                    if (submitButton.disabled) {
+                        submitButton.innerHTML = '<span class="relative z-10">Create Account</span>';
+                        submitButton.disabled = false;
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

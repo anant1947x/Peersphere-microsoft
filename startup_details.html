@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroVision - Startup Details | PeerSphere</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        secondary: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        dark: '#0a0a0a',
+                        darker: '#050505',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(5,5,5,0.9) 0%, rgba(10,10,10,0.95) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.1), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
+        }
+        
+        .animate-particles {
+            animation: particles 20s linear infinite;
+        }
+        
+        @keyframes particles {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+            }
+        }
+        
+        .startup-card {
+            transition: all 0.3s ease;
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .startup-card:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2);
+        }
+        
+        .badge {
+            transition: all 0.2s ease;
+        }
+        
+        .badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ef4444;
+        }
+        
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+            background-image: linear-gradient(to right, #4f46e5, #6366f1);
+        }
+        
+        .btn-primary:hover {
+            background-image: linear-gradient(to right, #4338ca, #4f46e5);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-secondary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background-color: #6366f1;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.2);
+        }
+
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            color: #6366f1;
+        }
+
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            border-color: #6366f1;
+        }
+
+        .tab-button:hover:not(.active) {
+            background-color: rgba(99, 102, 241, 0.05);
+        }
+
+        .form-input {
+            transition: all 0.3s ease;
+            background-color: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .form-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-label {
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            transform: translateY(-1.5rem);
+            font-size: 0.75rem;
+            color: #6366f1;
+        }
+
+        .team-member {
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member:hover .team-member-social {
+            opacity: 1;
+        }
+
+        .team-member-social {
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+
+        .milestone {
+            transition: all 0.3s ease;
+        }
+
+        .milestone:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(17, 24, 39, 0.1);
+        }
+    </style>
+</head>
+<body class="text-white overflow-x-hidden">
+    <!-- Particle Background -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div id="particles-container" class="absolute inset-0"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-opacity-80 bg-darker backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="index.html" class="flex items-center">
+                            <div class="h-10 w-10 rounded-full bg-gradient-to-r from-primary-600 to-secondary-500 flex items-center justify-center text-white font-bold text-xl">P</div>
+                            <span class="ml-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400">PeerSphere</span>
+                        </a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="index.html" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white hover:text-primary-400 transition-colors">Home</a>
+                            <a href="index.html#explore" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white hover:text-primary-400 transition-colors">Explore</a>
+                            <a href="#" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white hover:text-primary-400 transition-colors">Dashboard</a>
+                            <a href="#" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-white hover:text-primary-400 transition-colors">Profile</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-primary text-white font-medium py-2 px-4 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50">
+                        Join Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Startup Header -->
+    <section class="pt-24 pb-12 bg-gradient-to-b from-darker to-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div class="h-32 w-32 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-5xl shadow-lg">
+                    A
+                </div>
+                <div class="text-center md:text-left">
+                    <div class="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+                        <h1 class="text-4xl font-bold">AeroVision</h1>
+                        <div class="flex items-center justify-center md:justify-start">
+                            <span class="px-3 py-1 bg-purple-900 bg-opacity-50 text-purple-300 rounded-full text-sm">Tech</span>
+                            <div class="flex ml-3">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xl text-gray-300 max-w-3xl mb-6">
+                        Building the next generation of drone delivery systems for urban environments.
+                    </p>
+                    <div class="flex flex-wrap gap-3 justify-center md:justify-start mb-6">
+                        <span class="badge px-3 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-sm">UI/UX Designer</span>
+                        <span class="badge px-3 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-sm">Backend Developer</span>
+                        <span class="badge px-3 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-sm">AI Engineer</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <button id="apply-button" class="btn-primary text-white font-medium py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50">
+                            Apply to Join
+                        </button>
+                        <button class="btn-secondary bg-transparent border border-primary-500 text-white font-medium py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50">
+                            Contact Team
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Startup Details Tabs -->
+    <section class="py-12 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Tabs Navigation -->
+            <div class="flex flex-wrap border-b border-gray-800 mb-8">
+                <button class="tab-button active px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 border-primary-500" data-tab="about">
+                    About
+                </button>
+                <button class="tab-button px-6 py-3 text-sm font-medium text-gray-400 hover:text-white" data-tab="team">
+                    Team
+                </button>
+                <button class="tab-button px-6 py-3 text-sm font-medium text-gray-400 hover:text-white" data-tab="progress">
+                    Progress & Milestones
+                </button>
+                <button class="tab-button px-6 py-3 text-sm font-medium text-gray-400 hover:text-white" data-tab="rewards">
+                    Rewards & Incentives
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- About Tab -->
+                <div id="about-tab" class="tab-pane active">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <h2 class="text-2xl font-bold mb-6">Our Vision</h2>
+                            <p class="text-gray-300 mb-6">
+                                AeroVision is revolutionizing urban logistics with our cutting-edge drone delivery system. We're building a network of autonomous drones that can navigate complex urban environments to deliver packages quickly, efficiently, and with minimal environmental impact.
+                            </p>
+                            <p class="text-gray-300 mb-6">
+                                Our proprietary AI navigation system allows our drones to adapt to changing conditions, avoid obstacles, and optimize delivery routes in real-time. We're not just building drones; we're creating an entire ecosystem for the future of urban delivery.
+                            </p>
+                            <h2 class="text-2xl font-bold mb-6">The Problem We're Solving</h2>
+                            <p class="text-gray-300 mb-6">
+                                Urban delivery faces numerous challenges: traffic congestion, high carbon emissions, inefficient routes, and high operational costs. Traditional delivery methods struggle to meet the growing demand for fast, reliable delivery services, especially in dense urban areas.
+                            </p>
+                            <p class="text-gray-300 mb-6">
+                                Our drone delivery system bypasses ground traffic, reduces carbon emissions, and can deliver packages in a fraction of the time compared to traditional methods. We're not just improving delivery - we're reimagining it from the ground up.
+                            </p>
+                            <h2 class="text-2xl font-bold mb-6">Our Technology</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div class="bg-darker p-6 rounded-lg">
+                                    <h3 class="text-xl font-semibold mb-3">AI Navigation System</h3>
+                                    <p class="text-gray-300">
+                                        Our proprietary AI system enables drones to navigate complex urban environments, avoid obstacles, and adapt to changing conditions in real-time.
+                                    </p>
+                                </div>
+                                <div class="bg-darker p-6 rounded-lg">
+                                    <h3 class="text-xl font-semibold mb-3">Energy-Efficient Design</h3>
+                                    <p class="text-gray-300">
+                                        Our drones are designed for maximum energy efficiency, with optimized aerodynamics and smart power management systems.
+                                    </p>
+                                </div>
+                                <div class="bg-darker p-6 rounded-lg">
+                                    <h3 class="text-xl font-semibold mb-3">Secure Delivery Mechanism</h3>
+                                    <p class="text-gray-300">
+                                        Our innovative package securing and release mechanism ensures safe and reliable deliveries to designated drop points.
+                                    </p>
+                                </div>
+                                <div class="bg-darker p-6 rounded-lg">
+                                    <h3 class="text-xl font-semibold mb-3">Fleet Management Platform</h3>
+                                    <p class="text-gray-300">
+                                        Our cloud-based platform manages the entire drone fleet, optimizing routes and coordinating deliveries for maximum efficiency.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="bg-darker rounded-lg p-6 mb-8">
+                                <h3 class="text-xl font-semibold mb-4">Startup Details</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Founded</h4>
+                                        <p class="text-white">January 2023</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Stage</h4>
+                                        <p class="text-white">Seed</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Team Size</h4>
+                                        <p class="text-white">8 members</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Location</h4>
+                                        <p class="text-white">San Francisco, CA (Remote-friendly)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-darker rounded-lg p-6">
+                                <h3 class="text-xl font-semibold mb-4">Current Openings</h3>
+                                <div class="space-y-4">
+                                    <div class="p-4 border border-gray-800 rounded-lg hover:border-primary-500 transition-colors">
+                                        <h4 class="font-medium mb-1">UI/UX Designer</h4>
+                                        <p class="text-sm text-gray-400 mb-2">Design intuitive interfaces for our drone control and monitoring systems.</p>
+                                        <span class="inline-block px-2 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-xs">3 Positions</span>
+                                    </div>
+                                    <div class="p-4 border border-gray-800 rounded-lg hover:border-primary-500 transition-colors">
+                                        <h4 class="font-medium mb-1">Backend Developer</h4>
+                                        <p class="text-sm text-gray-400 mb-2">Develop scalable backend systems for our drone fleet management platform.</p>
+                                        <span class="inline-block px-2 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-xs">2 Positions</span>
+                                    </div>
+                                    <div class="p-4 border border-gray-800 rounded-lg hover:border-primary-500 transition-colors">
+                                        <h4 class="font-medium mb-1">AI Engineer</h4>
+                                        <p class="text-sm text-gray-400 mb-2">Improve our AI navigation and obstacle avoidance systems.</p>
+                                        <span class="inline-block px-2 py-1 bg-primary-900 bg-opacity-50 text-primary-300 rounded-full text-xs">1 Position</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Tab -->
+                <div id="team-tab" class="tab-pane hidden">
+                    <h2 class="text-2xl font-bold mb-8">Meet Our Team</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Team Member 1 -->
+                        <div class="team-member bg-darker rounded-lg overflow-hidden">
+                            <div class="h-48 bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
+                                <svg class="w-24 h-24 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-1">Alex Chen</h3>
+                                <p class="text-primary-400 mb-3">Founder & CEO</p>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Former aerospace engineer with 10+ years of experience in drone technology and AI systems.
+                                </p>
+                                <div class="team-member-social flex space-x-3">
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-1.005-.02-2.3-1.39-2.3-1.39 0-1.601 1.094-1.601 2.226v4.252H8.014v-8.59h2.557v1.181h.037c.355-.675 1.227-1.387 2.534-1.387 2.712 0 3.196 1.78 3.196 4.11v4.686zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 2 -->
+                        <div class="team-member bg-darker rounded-lg overflow-hidden">
+                            <div class="h-48 bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+                                <svg class="w-24 h-24 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-1">Sarah Johnson</h3>
+                                <p class="text-primary-400 mb-3">CTO</p>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    AI specialist with a PhD in Computer Vision and experience at leading tech companies.
+                                </p>
+                                <div class="team-member-social flex space-x-3">
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-1.005-.02-2.3-1.39-2.3-1.39 0-1.601 1.094-1.601 2.226v4.252H8.014v-8.59h2.557v1.181h.037c.355-.675 1.227-1.387 2.534-1.387 2.712 0 3.196 1.78 3.196 4.11v4.686zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 3 -->
+                        <div class="team-member bg-darker rounded-lg overflow-hidden">
+                            <div class="h-48 bg-gradient-to-r from-green-600 to-teal-600 flex items-center justify-center">
+                                <svg class="w-24 h-24 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-1">Michael Rodriguez</h3>
+                                <p class="text-primary-400 mb-3">Lead Engineer</p>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Hardware specialist with expertise in drone design and embedded systems.
+                                </p>
+                                <div class="team-member-social flex space-x-3">
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-1.005-.02-2.3-1.39-2.3-1.39 0-1.601 1.094-1.601 2.226v4.252H8.014v-8.59h2.557v1.181h.037c.355-.675 1.227-1.387 2.534-1.387 2.712 0 3.196 1.78 3.196 4.11v4.686zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member 4 -->
+                        <div class="team-member bg-darker rounded-lg overflow-hidden">
+                            <div class="h-48 bg-gradient-to-r from-pink-600 to-rose-600 flex items-center justify-center">
+                                <svg class="w-24 h-24 text-white opacity-50" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-1">Emily Zhang</h3>
+                                <p class="text-primary-400 mb-3">Product Manager</p>
+                                <p class="text-gray-400 text-sm mb-4">
+                                    Former product manager at a leading tech company with expertise in bringing innovative products to market.
+                                </p>
+                                <div class="team-member-social flex space-x-3">
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-1.005-.02-2.3-1.39-2.3-1.39 0-1.601 1.094-1.601 2.226v4.252H8.014v-8.59h2.557v1.181h.037c.355-.675 1.227-1.387 2.534-1.387 2.712 0 3.196 1.78 3.196 4.11v4.686zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                    <a href="#" class="text-gray-400 hover:text-primary-400 transition-colors">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tab -->
+                <div id="progress-tab" class="tab-pane hidden">
+                    <h2 class="text-2xl font-bold mb-8">Progress & Milestones</h2>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mb-12">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-400">Current Progress</span>
+                            <span class="text-sm font-medium text-primary-400">65%</span>
+                        </div>
+                        <div class="h-4 bg-darker rounded-full overflow-hidden">
+                            <div class="progress-bar h-4 bg-gradient-to-r from-primary-600 to-primary-400 rounded-full" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Milestones -->
+                    <div class="space-y-8">
+                        <div class="milestone bg-darker rounded-lg p-6 border-l-4 border-green-500">
+                            <div class="flex items-center mb-4">
+                                <div class="h-10 w-10 rounded-full bg-green-900 bg-opacity-50 text-green-400 flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold">Prototype Development</h3>
+                                    <p class="text-green-400 text-sm">Completed - January 2023</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">
+                                Successfully developed and tested the first prototype of our drone delivery system, demonstrating basic navigation and delivery capabilities.
+                            </p>
+                        </div>
+                        
+                        <div class="milestone bg-darker rounded-lg p-6 border-l-4 border-green-500">
+                            <div class="flex items-center mb-4">
+                                <div class="h-10 w-10 rounded-full bg-green-900 bg-opacity-50 text-green-400 flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold">AI Navigation System</h3>
+                                    <p class="text-green-400 text-sm">Completed - April 2023</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">
+                                Developed and integrated our proprietary AI navigation system, enabling drones to navigate complex urban environments and avoid obstacles.
+                            </p>
+                        </div>
+                        
+                        <div class="milestone bg-darker rounded-lg p-6 border-l-4 border-primary-500">
+                            <div class="flex items-center mb-4">
+                                <div class="h-10 w-10 rounded-full bg-primary-900 bg-opacity-50 text-primary-400 flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold">Fleet Management Platform</h3>
+                                    <p class="text-primary-400 text-sm">In Progress - Expected: August 2023</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">
+                                Developing our cloud-based platform to manage the entire drone fleet, optimize routes, and coordinate deliveries for maximum efficiency.
+                            </p>
+                        </div>
+                        
+                        <div class="milestone bg-darker rounded-lg p-6 border-l-4 border-gray-500">
+                            <div class="flex items-center mb-4">
+                                <div class="h-10 w-10 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold">Pilot Program Launch</h3>
+                                    <p class="text-gray-400 text-sm">Upcoming - October 2023</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">
+                                Launch our pilot program in select urban areas, partnering with local businesses to demonstrate the effectiveness of our drone delivery system.
+                            </p>
+                        </div>
+                        
+                        <div class="milestone bg-darker rounded-lg p-6 border-l-4 border-gray-500">
+                            <div class="flex items-center mb-4">
+                                <div class="h-10 w-10 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold">Series A Funding</h3>
+                                    <p class="text-gray-400 text-sm">Upcoming - December 2023</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-300">
+                                Secure Series A funding to scale our operations, expand our team, and accelerate the development of our next-generation drone technology.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rewards Tab -->
+                <div id="rewards-tab" class="tab-pane hidden">
+                    <h2 class="text-2xl font-bold mb-8">Rewards & Incentives</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2">
+                            <div class="bg-darker rounded-lg p-8 mb-8">
+                                <h3 class="text-xl font-semibold mb-6">Equity Distribution</h3>
+                                <p class="text-gray-300 mb-6">
+                                    At AeroVision, we believe in rewarding our team members for their contributions. We've allocated 15% of our equity for early team members and contributors, distributed based on role, impact, and commitment.
+                                </p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-dark rounded-lg p-4">
+                                        <h4 class="font-medium mb-2">Core Team Members</h4>
+                                        <p class="text-gray-400 text-sm">
+                                            Core team members receive equity packages ranging from 0.5% to 2%, vesting over 4 years with a 1-year cliff.
+                                        </p>
+                                    </div>
+                                    <div class="bg-dark rounded-lg p-4">
+                                        <h4 class="font-medium mb-2">Key Contributors</h4>
+                                        <p class="text-gray-400 text-sm">
+                                            Key contributors receive equity packages ranging from 0.1% to 0.5%, vesting over 3 years with a 6-month cliff.
+                                        </p>
+                                    </div>
+                                    <div class="bg-dark rounded-lg p-4">
+                                        <h4 class="font-medium mb-2">Project-Based Contributors</h4>
+                                        <p class="text-gray-400 text-sm">
+                                            Project-based contributors receive equity grants based on the scope and impact of their contributions, typically ranging from 0.05% to 0.2%.
+                                        </p>
+                                    </div>
+                                    <div class="bg-dark rounded-lg p-4">
+                                        <h4 class="font-medium mb-2">Advisors & Mentors</h4>
+                                        <p class="text-gray-400 text-sm">
+                                            Advisors and mentors receive equity grants ranging from 0.1% to 0.3%, vesting over 2 years.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-darker rounded-lg p-8">
+                                <h3 class="text-xl font-semibold mb-6">Additional Benefits</h3>
+                                <div class="space-y-6">
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-6 w-6 text-primary-400 mt-0.5">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="font-medium">Professional Development</h4>
+                                            <p class="text-gray-400 text-sm mt-1">
+                                                Access to workshops, conferences, and courses to enhance your skills and knowledge in your area of expertise.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-6 w-6 text-primary-400 mt-0.5">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="font-medium">Networking Opportunities</h4>
+                                            <p class="text-gray-400 text-sm mt-1">
+                                                Connect with industry leaders, investors, and other startups in our network, opening doors for future opportunities.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-6 w-6 text-primary-400 mt-0.5">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="font-medium">Portfolio Building</h4>
+                                            <p class="text-gray-400 text-sm mt-1">
+                                                Work on cutting-edge technology and innovative solutions that will enhance your portfolio and resume.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 h-6 w-6 text-primary-400 mt-0.5">
+                                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h4 class="font-medium">Flexible Work Arrangements</h4>
+                                            <p class="text-gray-400 text-sm mt-1">
+                                                We offer flexible work hours and remote work options to accommodate your schedule and preferences.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="bg-darker rounded-lg p-6 mb-8">
+                                <h3 class="text-xl font-semibold mb-4">Compensation Structure</h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Full-time Roles</h4>
+                                        <p class="text-white">Competitive salary + equity</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Part-time Roles</h4>
+                                        <p class="text-white">Hourly rate + equity</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Project-based</h4>
+                                        <p class="text-white">Fixed project fee + equity</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-gray-400">Internships</h4>
+                                        <p class="text-white">Stipend + learning opportunities</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gradient-to-r from-primary-900 to-secondary-900 rounded-lg p-6">
+                                <h3 class="text-xl font-semibold mb-4">Join Our Team</h3>
+                                <p class="text-gray-300 mb-6">
+                                    Ready to be part of a revolutionary startup that's changing the future of urban delivery? Apply now to join our team and help build the future.
+                                </p>
+                                <button id="apply-now-button" class="w-full bg-white text-gray-900 font-medium py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+                                    Apply Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form Modal -->
+    <div id="application-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-75"></div>
+        <div class="relative bg-dark rounded-xl max-w-4xl w-full max-h-screen overflow-y-auto">
+            <div class="sticky top-0 bg-dark z-10 px-6 py-4 border-b border-gray-800 flex justify-between items-center">
+                <h2 class="text-2xl font-bold">Apply to Join AeroVision</h2>
+                <button id="close-modal" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <form id="application-form">
+                    <!-- Basic Information -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Basic Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="relative">
+                                <input type="text" id="full-name" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder=" " required>
+                                <label for="full-name" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">Full Name</label>
+                            </div>
+                            <div class="relative">
+                                <input type="email" id="email" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder=" " required>
+                                <label for="email" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">Email Address (Preferably College Email)</label>
+                            </div>
+                            <div class="relative md:col-span-2">
+                                <input type="text" id="college" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder=" " required>
+                                <label for="college" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">College & Branch</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skillset & Expertise -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Skillset & Expertise</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="relative">
+                                <select id="skills" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                                    <option value="">Select Your Primary Skill</option>
+                                    <option value="ui-ux">UI/UX Design</option>
+                                    <option value="backend">Backend Development</option>
+                                    <option value="ai">AI Engineering</option>
+                                    <option value="frontend">Frontend Development</option>
+                                    <option value="mobile">Mobile Development</option>
+                                    <option value="data">Data Analysis</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="content">Content Writing</option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <select id="experience" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                                    <option value="">Years of Experience</option>
+                                    <option value="beginner">Beginner (0-1 years)</option>
+                                    <option value="intermediate">Intermediate (1-3 years)</option>
+                                    <option value="advanced">Advanced (3+ years)</option>
+                                </select>
+                            </div>
+                            <div class="relative md:col-span-2">
+                                <input type="text" id="portfolio" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" placeholder=" ">
+                                <label for="portfolio" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">Portfolio Links (GitHub, Behance, LinkedIn, Personal Website)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Motivation & Interest -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Motivation & Interest</h3>
+                        <div class="space-y-6">
+                            <div class="relative">
+                                <textarea id="motivation" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 h-32" placeholder=" " required></textarea>
+                                <label for="motivation" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">Why do you want to join this startup? (150-200 words)</label>
+                            </div>
+                            <div class="relative">
+                                <textarea id="value" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 h-32" placeholder=" "></textarea>
+                                <label for="value" class="absolute left-4 top-3 text-gray-400 transition-all duration-300">What unique value can you bring? (Optional but recommended)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Availability & Commitment -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Availability & Commitment</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="relative">
+                                <select id="hours" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                                    <option value="">Hours per week you can contribute</option>
+                                    <option value="5-10">5-10 hours</option>
+                                    <option value="10-20">10-20 hours</option>
+                                    <option value="20-30">20-30 hours</option>
+                                    <option value="30+">30+ hours</option>
+                                </select>
+                            </div>
+                            <div class="relative">
+                                <select id="work-mode" class="form-input w-full bg-darker rounded-lg border border-gray-800 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary-500" required>
+                                    <option value="">Preferred Mode of Work</option>
+                                    <option value="remote">Remote</option>
+                                    <option value="hybrid">Hybrid</option>
+                                    <option value="in-person">In-Person</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expected Rewards -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Expected Rewards (Optional)</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="reward-experience" class="h-5 w-5 rounded border-gray-600 text-primary-600 focus:ring-primary-500 bg-darker">
+                                <label for="reward-experience" class="ml-3 text-white">Experience & Learning</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="reward-compensation" class="h-5 w-5 rounded border-gray-600 text-primary-600 focus:ring-primary-500 bg-darker">
+                                <label for="reward-compensation" class="ml-3 text-white">Monetary Compensation</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="reward-equity" class="h-5 w-5 rounded border-gray-600 text-primary-600 focus:ring-primary-500 bg-darker">
+                                <label for="reward-equity" class="ml-3 text-white">Equity/Share Allocation</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="reward-networking" class="h-5 w-5 rounded border-gray-600 text-primary-600 focus:ring-primary-500 bg-darker">
+                                <label for="reward-networking" class="ml-3 text-white">Networking & Growth Opportunities</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resume or Supporting Documents -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold mb-4 pb-2 border-b border-gray-800">Resume or Supporting Documents (Optional)</h3>
+                        <div class="space-y-6">
+                            <div class="relative">
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="resume" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-darker border-gray-700 hover:border-primary-500">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                            </svg>
+                                            <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                            <p class="text-xs text-gray-500">PDF (MAX. 10MB)</p>
+                                        </div>
+                                        <input id="resume" type="file" class="hidden" accept=".pdf" />
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="work-samples" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-darker border-gray-700 hover:border-primary-500">
+                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                            <svg class="w-8 h-8 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                            </svg>
+                                            <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click to upload</span> work samples</p>
+                                            <p class="text-xs text-gray-500">PDF, ZIP, or Images (MAX. 20MB)</p>
+                                        </div>
+                                        <input id="work-samples" type="file" class="hidden" accept=".pdf,.zip,.jpg,.jpeg,.png" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Agreement & Final Submission -->
+                    <div class="mb-8">
+                        <div class="flex items-center mb-6">
+                            <input type="checkbox" id="agreement" class="h-5 w-5 rounded border-gray-600 text-primary-600 focus:ring-primary-500 bg-darker" required>
+                            <label for="agreement" class="ml-3 text-white">I agree to contribute professionally and adhere to the startup's guidelines.</label>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50">
+                            Submit Application
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-75"></div>
+        <div class="relative bg-dark rounded-xl max-w-md w-full p-8 text-center">
+            <div class="h-20 w-20 rounded-full bg-green-900 bg-opacity-50 text-green-400 flex items-center justify-center mx-auto mb-6">
+                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold mb-4">Application Submitted!</h2>
+            <p class="text-gray-300 mb-8">
+                Thank you for applying to join AeroVision. We've received your application and will review it shortly. We'll be in touch soon!
+            </p>
+            <button id="close-success" class="w-full bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-opacity-50">
+                Return to Startup Details
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-darker py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-r from-primary-600 to-secondary-500 flex items-center justify-center text-white font-bold text-xl">P</div>
+                        <span class="ml-2 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400">PeerSphere</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Connecting students, bridging colleges, building futures.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="social-icon text-gray-400">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http
