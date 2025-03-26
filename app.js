@@ -114,7 +114,7 @@ app.post("/login", async (req, res) => {
 
 // Serve HTML pages
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "signup.html"))
+  res.sendFile(path.join(__dirname, "public", "index.html"))
 })
 
 app.get("/signup", (req, res) => {
